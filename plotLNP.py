@@ -9,34 +9,51 @@ import matplotlib.pyplot as plt
 import matplotlib
 #plt.style.use('dark_background')
 plt.style.use('default')
-matplotlib.rcParams['grid.alpha'] = 0.2
+matplotlib.rcParams['grid.alpha'] = 0.1
 rows=2
 columns=2
 fig=plt.figure(figsize=(12,8))
 
 plt.subplot(rows,columns,1)
-plt.plot(filter_kernel,alpha=.6)
+plt.plot(filter_kernel1,alpha=.2)
 #plt.title()
 
 plt.subplot(rows,columns,1)
+plt.plot(filter_kernel2,alpha=.2)
+
+plt.subplot(rows,columns,1)
+plt.plot(cweight*filter_kernel1+(1-cweight)*filter_kernel2,alpha=.6)
+
+plt.subplot(rows,columns,1)
 plt.plot(recovered_kernel,alpha=.6)
-plt.legend(['Filter','Spike triggered average (STA)'])
+
+plt.legend(['Filter 1','Filter 2','{}*Filter 1+{}*Filter 2'.format(cweight
+            ,np.round(1-cweight,2)),'Spike triggered average (STA)'],
+            fontsize='x-small')
+plt.grid()
+plt.title('Linear transformation')
+
 
 plt.subplot(rows,columns,2)
-plt.plot(k,nlt(k,nlt_index),alpha=.6)
+plt.plot(k,nlt(k,nlt_index1),alpha=.6)
+
+plt.subplot(rows,columns,2)
+plt.plot(k,nlt(k,nlt_index2),alpha=.6)
+
+plt.plot(k,cweight*nlt(k,nlt_index1)+(1-cweight)*nlt(k,nlt_index2),alpha=.6)
 
 plt.subplot(rows,columns,2)
 plt.scatter(logbins,spikecount_in_logbins,alpha=.6)
-plt.title('')
-#plt.axis((-30,30,np.min(logbins),np.max(logbins)))
 
 plt.subplot(rows,columns,2)
 plt.scatter(quantiles,spikecount_in_bins,alpha=.6)
-plt.legend(['Non-linear transformation',
+plt.legend(['Non-linear transformation 1',
+            'Non-linear transformation 2',
+            '{}*NLT1+{}*NLT2'.format(cweight,np.round(1-cweight,2)),
             'Recovered using logbins',
             'Recovered using quantiles'],
-            fontsize='small')
-
+            fontsize='x-small')
+plt.title('Non-linear transformation')
 
 plt.show()
 print('{} seconds were simulated with {} s time steps.'
