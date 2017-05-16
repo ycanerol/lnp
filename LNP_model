@@ -9,20 +9,20 @@ Created on Tue May  9 18:11:51 2017
 import numpy as np
 from scipy.stats.mstats import mquantiles
 
-total_frames=100000
+total_frames=400000
 dt=0.001    # Time step
 t=np.arange(0,total_frames*dt,dt) # Time vector
 filter_time=.6 # The longest feature RGCs respond to is ~600ms 
 filter_length=int(filter_time/dt) # Filter is filter_length frames long
 
-cweight=.45 # The weight of combination for the two filters
+cweight=.5 # The weight of combination for the two filters
 
 def make_noise(): # Generate gaussian noise for stimulus
     return np.random.normal(0,9,total_frames) 
-#stimulus=make_noise()
+stimulus=make_noise()
 
 filter_index1=1   # Change filter type here
-filter_index2=4 
+filter_index2=1 
 
 def linear_filter(t,filter_index):    # Define filter according to choice
     if filter_index==1: f=np.exp(-(t-0.15)**2/0.002)-np.exp(-(t-0.17)**2/0.001)
@@ -39,7 +39,7 @@ filtered1=np.convolve(filter_kernel1,stimulus,mode='full')[:-filter_length+1]
 filtered2=np.convolve(filter_kernel2,stimulus,mode='full')[:-filter_length+1]
 
 k=np.linspace(-30,30,1001)
-nlt_index1=2
+nlt_index1=1
 nlt_index2=5
 
 def nlt(k, nlt_index):

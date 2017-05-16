@@ -32,6 +32,7 @@ plt.legend(['Filter 1','Filter 2','{}*Filter 1+{}*Filter 2'.format(cweight
             fontsize='x-small')
 plt.grid()
 plt.title('Linear transformation')
+plt.xlabel('Time [ms]')
 
 
 plt.subplot(rows,columns,2)
@@ -43,10 +44,10 @@ plt.plot(k,nlt(k,nlt_index2),alpha=.6)
 plt.plot(k,cweight*nlt(k,nlt_index1)+(1-cweight)*nlt(k,nlt_index2),alpha=.6)
 
 plt.subplot(rows,columns,2)
-plt.scatter(logbins,spikecount_in_logbins,alpha=.6)
+plt.scatter(logbins,spikecount_in_logbins,s=6,alpha=.6)
 
 plt.subplot(rows,columns,2)
-plt.scatter(quantiles,spikecount_in_bins,alpha=.6)
+plt.scatter(quantiles,spikecount_in_bins,s=6,alpha=.6)
 plt.legend(['Non-linear transformation 1',
             'Non-linear transformation 2',
             '{}*NLT1+{}*NLT2'.format(cweight,np.round(1-cweight,2)),
