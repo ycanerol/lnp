@@ -9,86 +9,113 @@ Created on Tue May  9 18:11:51 2017
 import numpy as np
 from scipy.stats.mstats import mquantiles
 
-total_frames=10000
-dt=0.001    # Time step
-t=np.arange(0,total_frames*dt,dt) # Time vector
-filter_time=.6 # The longest feature RGCs respond to is ~600ms 
-filter_length=int(filter_time/dt) # Filter is filter_length frames long
+total_frames = 10000
+dt = 0.001    # Time step
+t = np.arange(0, total_frames*dt, dt)  # Time vector
+filter_time = .6  # The longest feature RGCs respond to is ~600ms
+filter_length = int(filter_time/dt)  # Filter is filter_length frames long
 
-cweight=1 # The weight of combination for the two filters
+cweight = 1  # The weight of combination for the two filters
 
-def make_noise(): # Generate gaussian noise for stimulus
-    return np.random.normal(0,9,total_frames) 
-#stimulus=make_noise()
 
-filter_index1=2   # Change filter type here
-filter_index2=1 
+def make_noise():  # Generate gaussian noise for stimulus
+    return np.random.normal(0, 9, total_frames)
+# stimulus=make_noise()
 
-def linear_filter(t,filter_index):    # Define filter according to choice
-    if filter_index==1: f=np.exp(-(t-0.15)**2/0.002)-np.exp(-(t-0.17)**2/0.001)
-    elif filter_index==2: f=np.exp(-(t-0.05)**2/0.002)-2*np.exp(-(t-0.22)**2/0.001)
-    elif filter_index==3: f=np.exp(-(t-0.06)**2/0.002)
-    elif filter_index==4: f=np.exp(-(.4*t-0.1)**2/0.002)-2*np.exp(-(t-0.5)**2/0.001)
-    else: raise ValueError('Invalid filter index')   
-    f=(f-np.mean(f))/np.sqrt(sum(f**2)) # Normalize filter
-    return f[:filter_length] # Kernel should be filter_length frames long
+filter_index1 = 2   # Change filter type here
+filter_index2 = 1
 
-filter_kernel1=linear_filter(t,filter_index1)   # Two parallel filters are applied
-filter_kernel2=linear_filter(t,filter_index2)   # at the same time
-filtered1=np.convolve(filter_kernel1,stimulus,mode='full')[:-filter_length+1]
-filtered2=np.convolve(filter_kernel2,stimulus,mode='full')[:-filter_length+1]
 
-k=np.linspace(-30,30,1001)
-nlt_index1=1
-nlt_index2=5
+def linear_filter(t, filter_index):    # Define filter according to choice
+    if filter_index == 1:
+        f = np.exp(-(t-.15)**2/.002)-np.exp(-(t-.17)**2/.001)
+    elif filter_index == 2:
+        f = np.exp(-(t-.05)**2/.002)-2*np.exp(-(t-.22)**2/.001)
+    elif filter_index == 3:
+        f = np.exp(-(t-0.06)**2/.002)
+    elif filter_index == 4:
+        f = np.exp(-(.4*t-0.1)**2/0.002)-2*np.exp(-(t-.5)**2/.001)
+    else:
+        raise ValueError('Invalid filter index')
+    f = (f-np.mean(f)) / np.sqrt(sum(f**2))  # Normalize filter
+    return f[:filter_length]  # Kernel should be filter_length frames long
+
+filter_kernel1 = linear_filter(t, filter_index1)   # Two parallel filters are
+filter_kernel2 = linear_filter(t, filter_index2)   # applied at the same time
+filtered1 = np.convolve(filter_kernel1, stimulus,
+                        mode='full')[:-filter_length+1]
+filtered2 = np.convolve(filter_kernel2, stimulus,
+                        mode='full')[:-filter_length+1]
+
+k = np.linspace(-30, 30, 1001)
+nlt_index1 = 1
+nlt_index2 = 5
+
 
 def nlt(k, nlt_index):
-    if   nlt_index==1: nlfunction = lambda x: (0 if x < 0 else x)
-    elif nlt_index==2: nlfunction = lambda x: np.exp(x*.12)
-    elif nlt_index==3: nlfunction = lambda x: -10/(1+np.exp(x-2))+10
-    elif nlt_index==4: nlfunction = lambda x: (-x*.4 if x<0 else x)
-    elif nlt_index==5: nlfunction = lambda x: (0.02*x**2 if x<0 else .04*x**2)
-    else: raise ValueError('Invalid non-linearity index')   
+    if nlt_index == 1:
+        nlfunction = lambda x: (0 if x < 0 else x)
+    elif nlt_index == 2:
+        nlfunction = lambda x: np.exp(x*.12)
+    elif nlt_index == 3:
+        nlfunction = lambda x: -10/(1+np.exp(x-2))+10
+    elif nlt_index == 4:
+        nlfunction = lambda x: (-x*.4 if x < 0 else x)
+    elif nlt_index == 5:
+        nlfunction = lambda x: (0.02*x**2 if x < 0 else .04*x**2)
+    else:
+        raise ValueError('Invalid non-linearity index')
     return np.array([nlfunction(x) for x in k])
 
-fire_rates1=np.array(nlt(filtered1,nlt_index1))
-fire_rates2=np.array(nlt(filtered2,nlt_index2))
-fire_rates_sum=cweight*fire_rates1+(1-cweight)*fire_rates2 # Fire rates are combined
-                                                           # with a linear weight
-#Spikes
-spikes=np.array([])
+fire_rates1 = np.array(nlt(filtered1, nlt_index1))
+fire_rates2 = np.array(nlt(filtered2, nlt_index2))
+fire_rates_sum = cweight*fire_rates1+(1-cweight)*fire_rates2
+# Fire rates are combined with a linear weight
+
+# Spikes
+spikes = np.array([])
 for i in fire_rates_sum:
-    spikes=np.append(spikes,np.random.poisson(i)) # Number of spikes for each frame
+    spikes = np.append(spikes, np.random.poisson(i))
+    # Number of spikes for each frame
 
 print('{} spikes generated.'.format(int(sum(spikes))))
 #%%
-def sta(spikes,stimulus,filter_length):
-    snippets=np.zeros(filter_length)
-    for i in range(filter_length,total_frames):
-        snippets=snippets+stimulus[i:i-filter_length:-1]*spikes[i] # Snippets are inverted before
-                                                                   # being added
-    sta_unscaled=snippets/sum(spikes)   # Normalize/scale the STA
-    sta_scaled=sta_unscaled/np.sqrt(sum(np.power(sta_unscaled,2)))
-    return sta_scaled
-recovered_kernel=sta(spikes,stimulus,filter_length)
 
-filtered_recovery=np.convolve(recovered_kernel,stimulus,mode='full')[:-filter_length+1]
+
+def sta(spikes, stimulus, filter_length):
+    snippets = np.zeros(filter_length)
+    for i in range(filter_length, total_frames):
+        snippets = snippets+stimulus[i:i-filter_length:-1]*spikes[i]
+        # Snippets are inverted before being added
+    sta_unscaled = snippets/sum(spikes)   # Normalize/scale the STA
+    sta_scaled = sta_unscaled/np.sqrt(sum(np.power(sta_unscaled, 2)))
+    return sta_scaled
+recovered_kernel = sta(spikes, stimulus, filter_length)
+
+filtered_recovery = np.convolve(recovered_kernel, stimulus,
+                                mode='full')[:-filter_length+1]
 
 #%% Variable bin size, log
-log_bin_nr=60
-logbins=np.logspace(0,np.log(30)/np.log(10),log_bin_nr)
-logbins=-logbins[::-1]+logbins
-logbindices=np.digitize(filtered_recovery,logbins)
-spikecount_in_logbins=np.array([])
+log_bin_nr = 60
+logbins = np.logspace(0, np.log(30)/np.log(10), log_bin_nr)
+logbins = -logbins[::-1]+logbins
+logbindices = np.digitize(filtered_recovery, logbins)
+spikecount_in_logbins = np.array([])
 for i in range(log_bin_nr):
-    spikecount_in_logbins=np.append(spikecount_in_logbins,(np.average(spikes[np.where(logbindices==i)])))
+    spikecount_in_logbins = np.append(spikecount_in_logbins,
+                                      (np.average(spikes[np.where
+                                                         (logbindices == i)])))
 
 #%% Using mquantiles
-bin_nr=1000
-quantiles=mquantiles(filtered_recovery,np.linspace(0,1,bin_nr,endpoint=False))
-bindices=np.digitize(filtered_recovery,quantiles)   # Returns which bin each should go
-spikecount_in_bins=np.array([])
-for i in range(bin_nr): # Sorts values into bins
-    spikecount_in_bins=np.append(spikecount_in_bins,(np.average(spikes[np.where(bindices==i)])))
+bin_nr = 1000
+quantiles = mquantiles(filtered_recovery,
+                       np.linspace(0, 1, bin_nr, endpoint=False))
+bindices = np.digitize(filtered_recovery, quantiles)
+# Returns which bin each should go
+spikecount_in_bins = np.array([])
+for i in range(bin_nr):  # Sorts values into bins
+    spikecount_in_bins = np.append(spikecount_in_bins,
+                                   (np.average(spikes[np.where
+                                                      (bindices == i)])))
 
 runfile('/Users/ycan/Documents/official/gottingen/lab rotations/LR3 Gollisch/scripts/plotLNP.py', wdir='/Users/ycan/Documents/python')
