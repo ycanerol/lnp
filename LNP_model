@@ -15,15 +15,15 @@ t = np.arange(0, total_frames*dt, dt)  # Time vector
 filter_time = .6  # The longest feature RGCs respond to is ~600ms
 filter_length = int(filter_time/dt)  # Filter is filter_length frames long
 
-cweight = 1  # The weight of combination for the two filters
+cweight = .5  # The weight of combination for the two filters
 
 
 def make_noise():  # Generate gaussian noise for stimulus
     return np.random.normal(0, 9, total_frames)
-# stimulus=make_noise()
+stimulus = make_noise()
 
 filter_index1 = 2   # Change filter type here
-filter_index2 = 1
+filter_index2 = 3
 
 
 def linear_filter(t, filter_index):    # Define filter according to choice

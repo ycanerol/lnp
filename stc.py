@@ -22,9 +22,17 @@ def stc(spikes, stimulus, filter_length, sta_temp):
             # Snippets are inverted before being added
             snpta = np.matrix(snippet-sta_temp)
             covariance = covariance+(snpta.T*snpta)*spikes[i]
-    return covariance/(sum(spikes)+filter_length-1)
+    return covariance/(sum(spikes)*filter_length-1)
 
 recovered_stc = stc(spikes, stimulus, filter_length,
                     sta(spikes, stimulus, filter_length))
 runtime = str(datetime.now()-execution_timer).split('.')[0]
 print('Duration: {}'.format(runtime))
+
+
+w,v = np.linalg.eig(recovered_stc)
+# column v[:,i] is the eigenvector corresponding to the eigenvalue w[i]
+plt.plot(w, 'o', markersize=2)
+plt.show()
+plt.plot(v[:,1],'b')
+plt.plot(v[:,2],'g')
