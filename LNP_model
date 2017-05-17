@@ -9,7 +9,7 @@ Created on Tue May  9 18:11:51 2017
 import numpy as np
 from scipy.stats.mstats import mquantiles
 
-total_frames = 100000
+total_frames = 200000
 dt = 0.01   # Time step
 t = np.arange(0, total_frames*dt, dt)  # Time vector
 filter_time = .6  # The longest feature RGCs respond to is ~600ms
@@ -21,10 +21,10 @@ cweight = .5  # The weight of combination for the two filters
 def make_noise():  # Generate gaussian noise for stimulus
     return np.random.normal(0, 1, total_frames)
 
-#stimulus = make_noise()
+stimulus = make_noise()
 
-filter_index1 = 1   # Change filter type here
-filter_index2 = 3
+filter_index1 = 3   # Change filter type here
+filter_index2 = 1
 
 
 def linear_filter(t, filter_index):    # Define filter according to choice
@@ -49,27 +49,27 @@ filtered2 = np.convolve(filter_kernel2, stimulus,
                         mode='full')[:-filter_length+1]
 
 k = np.linspace(-5, 5, 1001)
-nlt_index1 = 6
-nlt_index2 = 3
+nlt_index1 = 2
+nlt_index2 = 4
 
-
+# %%
 def nlt(k, nlt_index):
     if nlt_index == 1:
-        nlfunction = lambda x: (0 if x < 0 else x)
+        nlfunction = lambda x: (0 if x < 0 else 4.2*x)
     elif nlt_index == 2:
-        nlfunction = lambda x: np.exp(x*.12)
+        nlfunction = lambda x: np.exp(x*.6)
     elif nlt_index == 3:
-        nlfunction = lambda x: -10/(1+np.exp(x-2))+10
+        nlfunction = lambda x: -20/(1+np.exp(3*(x-3)))+20
     elif nlt_index == 4:
-        nlfunction = lambda x: (-x*.8 if x < 0 else x)
+        nlfunction = lambda x: (-x*.8 if x < 0 else 4*x)
     elif nlt_index == 5:
-        nlfunction = lambda x: (0.2*x**2 if x < 0 else .4*x**2)
+        nlfunction = lambda x: (.4*x**2 if x < 0 else .9*x**2)
     elif nlt_index == 6:
-        nlfunction = lambda x: 3*x**2
+        nlfunction = lambda x: x**2
     else:
         raise ValueError('Invalid non-linearity index')
     return np.array([nlfunction(x) for x in k])
-
+# %%
 fire_rates1 = np.array(nlt(filtered1, nlt_index1))
 fire_rates2 = np.array(nlt(filtered2, nlt_index2))
 fire_rates_sum = cweight*fire_rates1+(1-cweight)*fire_rates2
