@@ -9,7 +9,7 @@ Created on Tue May  9 18:11:51 2017
 import numpy as np
 from scipy.stats.mstats import mquantiles
 
-total_frames = 200000
+total_frames = 400000
 dt = 0.01   # Time step
 t = np.arange(0, total_frames*dt, dt)  # Time vector
 filter_time = .6  # The longest feature RGCs respond to is ~600ms

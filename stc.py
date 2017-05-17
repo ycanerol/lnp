@@ -37,17 +37,21 @@ sorted_eig = np.argsort(w)[::-1]
 w = w[sorted_eig]
 v = v[:, sorted_eig]
 
-fig=plt.figure(figsize=(12, 4))
+fig = plt.figure(figsize=(12, 4))
 
-plt.subplot(1,2,1)
+plt.subplot(1, 2, 1)
 plt.plot(w, 'o', markersize=2)
+plt.xlabel('Eigenvalue index')
+plt.ylabel('Variance')
 
-plt.subplot(1,2,2)
+plt.subplot(1, 2, 2)
 plt.plot(v[:, 0])
 plt.plot(v[:, 1])
 plt.plot(recovered_kernel)
-plt.legend(['0', '1', 'STA'], fontsize='x-small')
-
+plt.legend(['Eigenvector 0', 'Eigenvector 1', 'STA'], fontsize='x-small')
+plt.title('Filters recovered by STC')
+plt.xlabel('?')
+plt.ylabel('?')
 
 #plt.plot(v[:, -1])
 #plt.plot(v[:, -2])

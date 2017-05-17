@@ -11,8 +11,8 @@ import matplotlib
 plt.style.use('default')
 matplotlib.rcParams['grid.alpha'] = 0.1
 rows = 2
-columns = 2
-fig = plt.figure(figsize=(12, 8))
+columns = 1
+fig = plt.figure(figsize=(8, 8.5))
 
 plt.subplot(rows, columns, 1)
 plt.plot(filter_kernel1, alpha=.2)
@@ -31,11 +31,12 @@ plt.legend(['Filter {}'.format(filter_index1),
             'Filter {}'.format(filter_index2),
             '{}*Filter {}+{}*Filter {}'.format(cweight, filter_index1, 
              np.round(1-cweight,2),filter_index2),
-             'Spike triggered average (STA)'],
+            'Spike triggered average (STA)'],
             fontsize='x-small')
 plt.grid()
-plt.title('Linear transformation')
-plt.xlabel('Time [ms]')
+plt.title('Linear filters')
+plt.xlabel('?')
+plt.ylabel('?')
 
 
 plt.subplot(rows,columns,2)
@@ -59,6 +60,8 @@ plt.legend(['Non-linear transformation {}'.format(nlt_index1),
             'Recovered using quantiles'],
             fontsize='x-small')
 plt.title('Non-linear transformation')
+plt.xlabel('?')
+plt.ylabel('?')
 
 plt.show()
 print('{} seconds were simulated with {} s time steps.'
