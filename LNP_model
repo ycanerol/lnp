@@ -12,7 +12,7 @@ from datetime import datetime
 
 execution_timer = datetime.now()
 
-total_frames = 1000000
+total_frames = 4000000
 dt = 0.01   # Time step
 t = np.arange(0, total_frames*dt, dt)  # Time vector
 filter_time = .6  # The longest feature RGCs respond to is ~600ms
@@ -78,11 +78,14 @@ fire_rates2 = np.array(nlt(filtered2, nlt_index2))
 fire_rates_sum = cweight*fire_rates1+(1-cweight)*fire_rates2
 # Fire rates are combined with a linear weight
 
-# %%Spikes
-spikes = np.array([])
-for i in fire_rates_sum:
-    spikes = np.append(spikes, np.random.poisson(i))
-    # Number of spikes for each frame
+## %%Spikes
+#spikes = np.array([])
+#for i in fire_rates_sum:
+#    spikes = np.append(spikes, np.random.poisson(i))
+#    # Number of spikes for each frame
+
+# %% Spikes2
+spikes = np.array(np.random.poisson(fire_rates_sum))
 
 print('{} spikes generated.'.format(int(sum(spikes))))
 # %%
