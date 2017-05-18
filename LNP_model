@@ -78,14 +78,8 @@ fire_rates2 = np.array(nlt(filtered2, nlt_index2))
 fire_rates_sum = cweight*fire_rates1+(1-cweight)*fire_rates2
 # Fire rates are combined with a linear weight
 
-## %%Spikes
-#spikes = np.array([])
-#for i in fire_rates_sum:
-#    spikes = np.append(spikes, np.random.poisson(i))
-#    # Number of spikes for each frame
-
-# %% Spikes2
-spikes = np.array(np.random.poisson(fire_rates_sum))
+# %% Spikes
+spikes = np.array(np.random.poisson(fire_rates_sum*dt))
 
 print('{} spikes generated.'.format(int(sum(spikes))))
 # %%
@@ -114,7 +108,7 @@ spikecount_in_logbins = np.array([])
 for i in range(log_bin_nr):
     spikecount_in_logbins = np.append(spikecount_in_logbins,
                                       (np.average(spikes[np.where
-                                                         (logbindices == i)])))
+                                                         (logbindices == i)]))/dt)
 
 # %% Using mquantiles
 bin_nr = 100
@@ -126,7 +120,7 @@ spikecount_in_bins = np.array([])
 for i in range(bin_nr):  # Sorts values into bins
     spikecount_in_bins = np.append(spikecount_in_bins,
                                    (np.average(spikes[np.where
-                                                      (bindices == i)])))
+                                                      (bindices == i)])/dt))
 
 runfile('/Users/ycan/Documents/official/gottingen/lab rotations/LR3 Gollisch/scripts/plotLNP.py', wdir='/Users/ycan/Documents/python')
 
