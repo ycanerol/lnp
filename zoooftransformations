@@ -11,9 +11,9 @@ Zoo of linear filters and non-linear transformations
 import matplotlib.pyplot as plt
 import matplotlib
 
-rows = 1
-columns = 2
-fig = plt.figure(figsize=(12, 4))
+rows = 2
+columns = 1
+fig = plt.figure(figsize=(6, 8))
 
 plt.subplot(rows, columns, 1)
 filter_legends = []

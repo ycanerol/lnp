@@ -8,8 +8,11 @@ Created on Tue May  9 18:11:51 2017
 # %%
 import numpy as np
 from scipy.stats.mstats import mquantiles
+from datetime import datetime
 
-total_frames = 400000
+execution_timer = datetime.now()
+
+total_frames = 100000
 dt = 0.01   # Time step
 t = np.arange(0, total_frames*dt, dt)  # Time vector
 filter_time = .6  # The longest feature RGCs respond to is ~600ms
@@ -21,10 +24,10 @@ cweight = .5  # The weight of combination for the two filters
 def make_noise():  # Generate gaussian noise for stimulus
     return np.random.normal(0, 1, total_frames)
 
-stimulus = make_noise()
+#stimulus = make_noise()
 
-filter_index1 = 3   # Change filter type here
-filter_index2 = 1
+filter_index1 = 4  # Change filter type here
+filter_index2 = 3
 
 
 def linear_filter(t, filter_index):    # Define filter according to choice
@@ -49,8 +52,8 @@ filtered2 = np.convolve(filter_kernel2, stimulus,
                         mode='full')[:-filter_length+1]
 
 k = np.linspace(-5, 5, 1001)
-nlt_index1 = 2
-nlt_index2 = 4
+nlt_index1 = 6
+nlt_index2 = 6
 
 # %%
 def nlt(k, nlt_index):
@@ -123,3 +126,6 @@ for i in range(bin_nr):  # Sorts values into bins
                                                       (bindices == i)])))
 
 runfile('/Users/ycan/Documents/official/gottingen/lab rotations/LR3 Gollisch/scripts/plotLNP.py', wdir='/Users/ycan/Documents/python')
+
+runtime = str(datetime.now()-execution_timer).split('.')[0]
+print('Duration: {}'.format(runtime))

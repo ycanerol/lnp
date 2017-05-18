@@ -15,11 +15,11 @@ columns = 1
 fig = plt.figure(figsize=(8, 8.5))
 
 plt.subplot(rows, columns, 1)
-plt.plot(filter_kernel1, alpha=.2)
+plt.plot(filter_kernel1, alpha=.4)
 #plt.title()
 
 plt.subplot(rows, columns, 1)
-plt.plot(filter_kernel2, alpha=.2)
+plt.plot(filter_kernel2, alpha=.4)
 
 plt.subplot(rows, columns, 1)
 plt.plot(cweight*filter_kernel1+(1-cweight)*filter_kernel2, alpha=.6)

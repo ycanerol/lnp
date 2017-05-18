@@ -7,10 +7,8 @@ Created on Tue May 16 13:28:17 2017
 
 Spike-triggered covariance
 """
-from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
-execution_timer = datetime.now()
 
 sta_temp = sta(spikes, stimulus, filter_length)
 
@@ -21,14 +19,12 @@ def stc(spikes, stimulus, filter_length, sta_temp):
         if spikes[i] != 0:
             snippet = stimulus[i:i-filter_length:-1]
             # Snippets are inverted before being added
-            snpta = np.array(snippet-sta_temp)[np.newaxis,:]
+            snpta = np.array(snippet-sta_temp)[np.newaxis, :]
             covariance = covariance+np.dot(snpta.T, snpta)*spikes[i]
     return covariance/(sum(spikes)-1)
 
 recovered_stc = stc(spikes, stimulus, filter_length,
                     sta(spikes, stimulus, filter_length))
-runtime = str(datetime.now()-execution_timer).split('.')[0]
-print('Duration: {}'.format(runtime))
 
 # %%
 w, v = np.linalg.eig(recovered_stc)
@@ -44,11 +40,16 @@ plt.plot(w, 'o', markersize=2)
 plt.xlabel('Eigenvalue index')
 plt.ylabel('Variance')
 
+eigen_indices = [0, 1, 2]
+eigen_legends = []
+
 plt.subplot(1, 2, 2)
-plt.plot(v[:, 0])
-plt.plot(v[:, 1])
-plt.plot(recovered_kernel)
-plt.legend(['Eigenvector 0', 'Eigenvector 1', 'STA'], fontsize='x-small')
+for i in eigen_indices:
+    plt.plot(v[:, i])
+    eigen_legends.append(str('Eigenvector '+str(i)))
+plt.plot(recovered_kernel,':')
+eigen_legends.append('STA')
+plt.legend(eigen_legends, fontsize='x-small')
 plt.title('Filters recovered by STC')
 plt.xlabel('?')
 plt.ylabel('?')
