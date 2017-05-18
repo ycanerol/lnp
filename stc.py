@@ -19,7 +19,10 @@ def stc(spikes, stimulus, filter_length, sta_temp):
         if spikes[i] != 0:
             snippet = stimulus[i:i-filter_length:-1]
             # Snippets are inverted before being added
+            snippet = snippet-np.dot(snippet,sta_temp)*sta_temp
+            # Project out the STA from snippets
             snpta = np.array(snippet-sta_temp)[np.newaxis, :]
+            
             covariance = covariance+np.dot(snpta.T, snpta)*spikes[i]
     return covariance/(sum(spikes)-1)
 
@@ -40,7 +43,7 @@ plt.plot(w, 'o', markersize=2)
 plt.xlabel('Eigenvalue index')
 plt.ylabel('Variance')
 
-eigen_indices = [0, 1, 2]
+eigen_indices = [0, 1]
 eigen_legends = []
 
 plt.subplot(1, 2, 2)
