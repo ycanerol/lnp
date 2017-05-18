@@ -12,7 +12,7 @@ from datetime import datetime
 
 execution_timer = datetime.now()
 
-total_frames = 100000
+total_frames = 1000000
 dt = 0.01   # Time step
 t = np.arange(0, total_frames*dt, dt)  # Time vector
 filter_time = .6  # The longest feature RGCs respond to is ~600ms
@@ -24,7 +24,7 @@ cweight = .5  # The weight of combination for the two filters
 def make_noise():  # Generate gaussian noise for stimulus
     return np.random.normal(0, 1, total_frames)
 
-#stimulus = make_noise()
+stimulus = make_noise()
 
 filter_index1 = 4  # Change filter type here
 filter_index2 = 3
@@ -52,8 +52,8 @@ filtered2 = np.convolve(filter_kernel2, stimulus,
                         mode='full')[:-filter_length+1]
 
 k = np.linspace(-5, 5, 1001)
-nlt_index1 = 6
-nlt_index2 = 6
+nlt_index1 = 1
+nlt_index2 = 1
 
 # %%
 def nlt(k, nlt_index):
@@ -96,8 +96,8 @@ def sta(spikes, stimulus, filter_length):
             # Snippets are inverted before being added
     sta_unscaled = snippets/sum(spikes)   # Normalize/scale the STA
     sta_scaled = sta_unscaled/np.sqrt(sum(np.power(sta_unscaled, 2)))
-    return sta_scaled
-recovered_kernel = sta(spikes, stimulus, filter_length)
+    return sta_scaled,sta_unscaled
+recovered_kernel = sta(spikes, stimulus, filter_length)[0] # Use scaled STA
 
 filtered_recovery = np.convolve(recovered_kernel, stimulus,
                                 mode='full')[:-filter_length+1]

@@ -9,7 +9,10 @@ import matplotlib.pyplot as plt
 import matplotlib
 #plt.style.use('dark_background')
 plt.style.use('default')
+
 matplotlib.rcParams['grid.alpha'] = 0.1
+matplotlib.rcParams['figure.dpi'] = 100
+
 rows = 2
 columns = 1
 fig = plt.figure(figsize=(8, 8.5))
@@ -35,8 +38,8 @@ plt.legend(['Filter {}'.format(filter_index1),
             fontsize='x-small')
 plt.grid()
 plt.title('Linear filters')
-plt.xlabel('?')
-plt.ylabel('?')
+plt.xlabel('Time')
+plt.ylabel('Relative filter strength')
 
 
 plt.subplot(rows,columns,2)

@@ -10,7 +10,9 @@ Spike-triggered covariance
 import numpy as np
 import matplotlib.pyplot as plt
 
-sta_temp = sta(spikes, stimulus, filter_length)
+matplotlib.rcParams['figure.dpi'] = 100
+
+sta_temp = sta(spikes, stimulus, filter_length)[1] # Unscaled STA
 
 
 def stc(spikes, stimulus, filter_length, sta_temp):
@@ -26,8 +28,7 @@ def stc(spikes, stimulus, filter_length, sta_temp):
             covariance = covariance+np.dot(snpta.T, snpta)*spikes[i]
     return covariance/(sum(spikes)-1)
 
-recovered_stc = stc(spikes, stimulus, filter_length,
-                    sta(spikes, stimulus, filter_length))
+recovered_stc = stc(spikes, stimulus, filter_length, sta_temp)
 
 # %%
 w, v = np.linalg.eig(recovered_stc)
