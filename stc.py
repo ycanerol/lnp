@@ -37,30 +37,14 @@ sorted_eig = np.argsort(w)[::-1]
 w = w[sorted_eig]
 v = v[:, sorted_eig]
 
-fig = plt.figure(figsize=(12, 4))
-
-plt.subplot(1, 2, 1)
-plt.plot(w, 'o', markersize=2)
-plt.xlabel('Eigenvalue index')
-plt.ylabel('Variance')
-
 interesting_eigen_indices=np.where(np.abs(w-1)>.05)[0]
 eigen_indices = [0, -1]
-eigen_legends = []
 
-plt.subplot(1, 2, 2)
-for i in interesting_eigen_indices:
-    plt.plot(v[:, i])
-    eigen_legends.append(str('Eigenvector '+str(i)))
-plt.plot(recovered_kernel,':')
-eigen_legends.append('STA')
-plt.legend(eigen_legends, fontsize='x-small')
-plt.title('Filters recovered by STC')
-plt.xlabel('?')
-plt.ylabel('?')
+logbins_stc1,spikecount_in_logbins_stc1 = log_nlt_recovery(spikes,
+                                                 v[:,eigen_indices[0]], 60, k)   
+#quantiles_stc1,spikecount_in_bins_stc1 = q_nlt_recovery(spikes, filtered_recovery,100)    
+logbins_stc2,spikecount_in_logbins_stc2 = log_nlt_recovery(spikes,
+                                                 v[:,eigen_indices[1]], 60, k)     
 
-#plt.plot(v[:, -1])
-#plt.plot(v[:, -2])
-#plt.legend(['1', '2', '-1', '-2'], fontsize='x-small')
-plt.show()
+
 

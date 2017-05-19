@@ -51,10 +51,10 @@ plt.plot(k,nlt(k,nlt_index2),alpha=.6)
 plt.plot(k,cweight*nlt(k,nlt_index1)+(1-cweight)*nlt(k,nlt_index2),alpha=.6)
 
 plt.subplot(rows,columns,2)
-plt.scatter(logbins,spikecount_in_logbins,s=6,alpha=.6)
+plt.scatter(logbins_sta,spikecount_in_logbins_sta,s=6,alpha=.6)
 
 plt.subplot(rows,columns,2)
-plt.scatter(quantiles,spikecount_in_bins,s=6,alpha=.6)
+plt.scatter(quantiles_sta,spikecount_in_bins_sta,s=6,alpha=.6)
 plt.legend(['Non-linear transformation {}'.format(nlt_index1),
             'Non-linear transformation {}'.format(nlt_index2),
             '{}*NLT{}+{}*NLT{}'.format(cweight,nlt_index1,
@@ -71,3 +71,28 @@ print('{} seconds were simulated with {} s time steps.'
       .format(np.round(np.max(t)),dt))
 print('{} spikes generated.'.format(int(sum(spikes)))
        )
+
+# %% Plotting STC
+
+fig = plt.figure(figsize=(12, 4))
+
+plt.subplot(1, 2, 1)
+plt.plot(w, 'o', markersize=2)
+plt.xlabel('Eigenvalue index')
+plt.ylabel('Variance')
+
+
+eigen_legends = []
+
+plt.subplot(1, 2, 2)
+for i in interesting_eigen_indices:
+    plt.plot(v[:, i])
+    eigen_legends.append(str('Eigenvector '+str(i)))
+plt.plot(recovered_kernel,':')
+eigen_legends.append('STA')
+plt.legend(eigen_legends, fontsize='x-small')
+plt.title('Filters recovered by STC')
+plt.xlabel('?')
+plt.ylabel('?')
+plt.show()
+

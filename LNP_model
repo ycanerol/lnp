@@ -105,14 +105,13 @@ def log_nlt_recovery(spikes, filtered_recovery, bin_nr, k):
     logbins = -logbins[::-1]+logbins
     logbindices = np.digitize(filtered_recovery, logbins)
     spikecount_in_logbins = np.array([])
-    for i in range(log_bin_nr):
+    for i in range(bin_nr):
         spikecount_in_logbins = np.append(spikecount_in_logbins,
                                           (np.average(spikes[np.where
                                                              (logbindices == i)]))/dt)
     return logbins, spikecount_in_logbins
 
-logbins,spikecount_in_logbins = log_nlt_recovery(spikes,
-                                                 filtered_recovery, 60, k)
+
 # %% Using mquantiles
 def q_nlt_recovery(spikes,filtered_recovery, bin_nr):
     quantiles = mquantiles(filtered_recovery,
@@ -126,7 +125,13 @@ def q_nlt_recovery(spikes,filtered_recovery, bin_nr):
                                                           (bindices == i)])/dt))
     return quantiles,spikecount_in_bins 
 
-quantiles,spikecount_in_bins = q_nlt_recovery(spikes, filtered_recovery,100)    
+logbins_sta,spikecount_in_logbins_sta = log_nlt_recovery(spikes,
+                                                 filtered_recovery, 60, k)
+
+quantiles_sta,spikecount_in_bins_sta = q_nlt_recovery(spikes, 
+                                                      filtered_recovery,100)    
+
+runfile('/Users/ycan/Documents/official/gottingen/lab rotations/LR3 Gollisch/scripts/stc.py', wdir='/Users/ycan/Documents/python')
 
 runfile('/Users/ycan/Documents/official/gottingen/lab rotations/LR3 Gollisch/scripts/plotLNP.py', wdir='/Users/ycan/Documents/python')
 
