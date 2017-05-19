@@ -59,12 +59,13 @@ plt.legend(['Non-linear transformation {}'.format(nlt_index1),
             'Non-linear transformation {}'.format(nlt_index2),
             '{}*NLT{}+{}*NLT{}'.format(cweight,nlt_index1,
              np.round(1-cweight,2),nlt_index2),
-            'Recovered using logbins',
-            'Recovered using quantiles'],
+            'Recovered using logbins (STA)',
+            'Recovered using quantiles (STA)'],
             fontsize='x-small')
 plt.title('Non-linear transformation')
 plt.xlabel('?')
 plt.ylabel('?')
+plt.scatter(logbins_stc1,spikecount_in_logbins_stc1)
 
 plt.show()
 print('{} seconds were simulated with {} s time steps.'
@@ -74,18 +75,16 @@ print('{} spikes generated.'.format(int(sum(spikes)))
 
 # %% Plotting STC
 
-fig = plt.figure(figsize=(12, 4))
+fig = plt.figure(figsize=(8, 10))
 
-plt.subplot(1, 2, 1)
+plt.subplot(2, 2, 1)
 plt.plot(w, 'o', markersize=2)
 plt.xlabel('Eigenvalue index')
 plt.ylabel('Variance')
 
-
+plt.subplot(2, 2, 2)
 eigen_legends = []
-
-plt.subplot(1, 2, 2)
-for i in interesting_eigen_indices:
+for i in eigen_indices:
     plt.plot(v[:, i])
     eigen_legends.append(str('Eigenvector '+str(i)))
 plt.plot(recovered_kernel,':')
@@ -94,5 +93,12 @@ plt.legend(eigen_legends, fontsize='x-small')
 plt.title('Filters recovered by STC')
 plt.xlabel('?')
 plt.ylabel('?')
+
+
+plt.subplot(2,1,2)
+plt.scatter(logbins_stc1,spikecount_in_logbins_stc1)
+plt.scatter(logbins_stc2,spikecount_in_logbins_stc2)
+
+plt.title('Non-linearities recovered by STC')
 plt.show()
 

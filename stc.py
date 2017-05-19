@@ -37,14 +37,22 @@ sorted_eig = np.argsort(w)[::-1]
 w = w[sorted_eig]
 v = v[:, sorted_eig]
 
-interesting_eigen_indices=np.where(np.abs(w-1)>.05)[0]
-eigen_indices = [0, -1]
+eigen_indices=np.where(np.abs(w-1)>.05)[0]
+manual_eigen_indices = [0, -1]
 
-logbins_stc1,spikecount_in_logbins_stc1 = log_nlt_recovery(spikes,
-                                                 v[:,eigen_indices[0]], 60, k)   
+filtered_recovery_stc1 = np.convolve(v[:, eigen_indices[0]], stimulus,
+                                     mode='full')[:-filter_length+1]
+
+filtered_recovery_stc2 = np.convolve(v[:, eigen_indices[0]], stimulus,
+                                     mode='full')[:-filter_length+1]
+
+logbins_stc1, spikecount_in_logbins_stc1 = log_nlt_recovery(spikes,
+                                                            filtered_recovery_stc1,
+                                                            60, k)
 #quantiles_stc1,spikecount_in_bins_stc1 = q_nlt_recovery(spikes, filtered_recovery,100)    
-logbins_stc2,spikecount_in_logbins_stc2 = log_nlt_recovery(spikes,
-                                                 v[:,eigen_indices[1]], 60, k)     
+logbins_stc2, spikecount_in_logbins_stc2 = log_nlt_recovery(spikes,
+                                                            filtered_recovery_stc2,
+                                                            60, k)  
 
 
 

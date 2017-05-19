@@ -5,7 +5,6 @@ Created on Tue May  9 18:11:51 2017
 
 @author: ycan
 """
-# %%
 import numpy as np
 from scipy.stats.mstats import mquantiles
 from datetime import datetime
@@ -53,9 +52,9 @@ filtered2 = np.convolve(filter_kernel2, stimulus,
 
 k = np.linspace(-5, 5, 1001)
 nlt_index1 = 1
-nlt_index2 = 2
+nlt_index2 = 4
 
-# %%
+
 def nlt(k, nlt_index):
     if nlt_index == 1:
         nlfunction = lambda x: (0 if x < 0 else 4.2*x)
@@ -72,17 +71,15 @@ def nlt(k, nlt_index):
     else:
         raise ValueError('Invalid non-linearity index')
     return np.array([nlfunction(x) for x in k])
-# %%
+
 fire_rates1 = np.array(nlt(filtered1, nlt_index1))
 fire_rates2 = np.array(nlt(filtered2, nlt_index2))
 fire_rates_sum = cweight*fire_rates1+(1-cweight)*fire_rates2
 # Fire rates are combined with a linear weight
 
-# %% Spikes
 spikes = np.array(np.random.poisson(fire_rates_sum*dt))
 
 print('{} spikes generated.'.format(int(sum(spikes))))
-# %%
 
 
 def sta(spikes, stimulus, filter_length):
@@ -94,12 +91,12 @@ def sta(spikes, stimulus, filter_length):
     sta_unscaled = snippets/sum(spikes)   # Normalize/scale the STA
     sta_scaled = sta_unscaled/np.sqrt(sum(np.power(sta_unscaled, 2)))
     return sta_scaled, sta_unscaled
-recovered_kernel = sta(spikes, stimulus, filter_length)[0] # Use scaled STA
+recovered_kernel = sta(spikes, stimulus, filter_length)[0]  # Use scaled STA
 
 filtered_recovery = np.convolve(recovered_kernel, stimulus,
                                 mode='full')[:-filter_length+1]
 
-# %% Variable bin size, log
+# Variable bin size, log
 def log_nlt_recovery(spikes, filtered_recovery, bin_nr, k):
     logbins = np.logspace(0, np.log(max(k))/np.log(10), bin_nr)
     logbins = -logbins[::-1]+logbins
@@ -111,9 +108,8 @@ def log_nlt_recovery(spikes, filtered_recovery, bin_nr, k):
                                                              (logbindices == i)]))/dt)
     return logbins, spikecount_in_logbins
 
-
-# %% Using mquantiles
-def q_nlt_recovery(spikes,filtered_recovery, bin_nr):
+# Using mquantiles
+def q_nlt_recovery(spikes, filtered_recovery, bin_nr, k=0):
     quantiles = mquantiles(filtered_recovery,
                            np.linspace(0, 1, bin_nr, endpoint=False))
     bindices = np.digitize(filtered_recovery, quantiles)
@@ -123,13 +119,15 @@ def q_nlt_recovery(spikes,filtered_recovery, bin_nr):
         spikecount_in_bins = np.append(spikecount_in_bins,
                                        (np.average(spikes[np.where
                                                           (bindices == i)])/dt))
-    return quantiles,spikecount_in_bins 
+    return quantiles, spikecount_in_bins
 
-logbins_sta,spikecount_in_logbins_sta = log_nlt_recovery(spikes,
-                                                 filtered_recovery, 60, k)
+logbins_sta, spikecount_in_logbins_sta = log_nlt_recovery(
+                                                          spikes,
+                                                          filtered_recovery,
+                                                          60, k)
 
-quantiles_sta,spikecount_in_bins_sta = q_nlt_recovery(spikes, 
-                                                      filtered_recovery,100)    
+quantiles_sta, spikecount_in_bins_sta = q_nlt_recovery(spikes,
+                                                       filtered_recovery, 100)
 
 runfile('/Users/ycan/Documents/official/gottingen/lab rotations/LR3 Gollisch/scripts/stc.py', wdir='/Users/ycan/Documents/python')
 
