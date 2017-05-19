@@ -15,7 +15,7 @@ matplotlib.rcParams['figure.dpi'] = 100
 
 rows = 2
 columns = 1
-fig = plt.figure(figsize=(8, 8.5))
+fig = plt.figure(figsize=(8, 10))
 
 plt.subplot(rows, columns, 1)
 plt.plot(filter_kernel1, alpha=.4)

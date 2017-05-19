@@ -44,11 +44,12 @@ plt.plot(w, 'o', markersize=2)
 plt.xlabel('Eigenvalue index')
 plt.ylabel('Variance')
 
-eigen_indices = [0, 1]
+interesting_eigen_indices=np.where(np.abs(w-1)>.05)[0]
+eigen_indices = [0, -1]
 eigen_legends = []
 
 plt.subplot(1, 2, 2)
-for i in eigen_indices:
+for i in interesting_eigen_indices:
     plt.plot(v[:, i])
     eigen_legends.append(str('Eigenvector '+str(i)))
 plt.plot(recovered_kernel,':')
