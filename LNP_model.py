@@ -8,6 +8,7 @@ Created on Tue May  9 18:11:51 2017
 import numpy as np
 from scipy.stats.mstats import mquantiles
 from datetime import datetime
+import matplotlib
 
 execution_timer = datetime.now()
 
@@ -23,7 +24,7 @@ cweight = .5  # The weight of combination for the two filters
 def make_noise():  # Generate gaussian noise for stimulus
     return np.random.normal(0, 1, total_frames)
 
-#stimulus = make_noise()
+stimulus = make_noise()
 
 filter_index1 = 1  # Change filter type here
 filter_index2 = 3
@@ -82,7 +83,7 @@ spikes = np.array(np.random.poisson(fire_rates_sum*dt))
 print('{} spikes generated.'.format(int(sum(spikes))))
 
 
-def sta(spikes, stimulus, filter_length):
+def sta(spikes, stimulus, filter_length, total_frames):
     snippets = np.zeros(filter_length)
     for i in range(filter_length, total_frames):
         if spikes[i] != 0:
@@ -91,7 +92,8 @@ def sta(spikes, stimulus, filter_length):
     sta_unscaled = snippets/sum(spikes)   # Normalize/scale the STA
     sta_scaled = sta_unscaled/np.sqrt(sum(np.power(sta_unscaled, 2)))
     return sta_scaled, sta_unscaled
-recovered_kernel = sta(spikes, stimulus, filter_length)[0]  # Use scaled STA
+recovered_kernel = sta(spikes, stimulus, filter_length,total_frames)[0]  
+# Use scaled STA
 
 filtered_recovery = np.convolve(recovered_kernel, stimulus,
                                 mode='full')[:-filter_length+1]
