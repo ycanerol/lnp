@@ -12,7 +12,7 @@ import matplotlib
 
 execution_timer = datetime.now()
 
-total_frames = 10000000
+total_frames = 100000
 dt = 0.01   # Time step
 t = np.arange(0, total_frames*dt, dt)  # Time vector
 filter_time = .6  # The longest feature RGCs respond to is ~600ms

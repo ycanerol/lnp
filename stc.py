@@ -24,18 +24,20 @@ def stc(spikes, stimulus, filter_length, total_frames):
             snpta = np.array(snippet-sta_temp)[np.newaxis, :]
             
             covariance = covariance+np.dot(snpta.T, snpta)*spikes[i]
-    return covariance/(sum(spikes)-1)
+    covariance = covariance/(sum(spikes)-1)
+    eigenvalues, eigenvectors = np.linalg.eig(covariance)
 
-recovered_stc = stc(spikes, stimulus, filter_length, total_frames)
+    sorted_eig = np.argsort(eigenvalues)[::-1]
+    eigenvalues = eigenvalues[sorted_eig]
+    eigenvectors = eigenvectors[:, sorted_eig]
 
-# %%
-w, v = np.linalg.eig(recovered_stc)
+    return eigenvalues, eigenvectors
+
+w, v = stc(spikes, stimulus, filter_length, total_frames)
 # column v[:,i] is the eigenvector corresponding to the eigenvalue w[i]
-sorted_eig = np.argsort(w)[::-1]
-w = w[sorted_eig]
-v = v[:, sorted_eig]
 
-eigen_indices=np.where(np.abs(w-1)>.05)[0]
+
+eigen_indices = np.where(np.abs(w-1) > .05)[0]
 manual_eigen_indices = [0, -1]
 
 filtered_recovery_stc1 = np.convolve(v[:, eigen_indices[0]], stimulus,

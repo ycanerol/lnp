@@ -10,7 +10,7 @@ Analysis of real data
 Importing lnp only works if the directory containing LNP functions is added to
 the python path variable like the following.
 
-sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations
+sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations \
 /LR3 Gollisch/scripts/')
 
 This only needs to be done once.
@@ -22,6 +22,7 @@ import numpy as np
 import os, sys
 import lnp
 from collections import Counter
+import matplotlib.pyplot as plt
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/LR3 Gollisch/data/'
 stimulus_path = 'fff2h'
@@ -58,7 +59,7 @@ stimulus = stimulus[:total_frames]
 sta = lnp.sta(spikes, stimulus, filter_length, total_frames)[0]
 # Use scaled STA
 
-generator = np.convolve(recovered_kernel, stimulus,
+generator = np.convolve(sta, stimulus,
                         mode='full')[:-filter_length+1]
 
 logbins_sta, spikecount_in_logbins_sta = lnp.q_nlt_recovery(spikes, generator,
@@ -68,14 +69,21 @@ plt.plot(sta)
 plt.show()
 plt.scatter(logbins_sta,spikecount_in_logbins_sta,s=6,alpha=.6)
 plt.show()
+#%%
+w, v = lnp.stc(spikes, stimulus, filter_length, total_frames, dt)
 
-recovered_stc = stc(spikes, stimulus, filter_length, total_frames)
 
-w, v = np.linalg.eig(recovered_stc)
-# column v[:,i] is the eigenvector corresponding to the eigenvalue w[i]
-sorted_eig = np.argsort(w)[::-1]
-w = w[sorted_eig]
-v = v[:, sorted_eig]
-
-eigen_indices=np.where(np.abs(w-1)>.05)[0]
-manual_eigen_indices = [0, -1]
+#
+#eigen_indices=np.where(np.abs(w-1)>.05)[0]
+#manual_eigen_indices = [0, -1]
+#
+#eigen_legends = []
+#for i in manual_eigen_indices:
+#    plt.plot(v[:, i])
+#    eigen_legends.append(str('Eigenvector '+str(i)))
+#plt.plot(sta,':')
+#eigen_legends.append('STA')
+#plt.legend(eigen_legends, fontsize='x-small')
+#plt.title('Filters recovered by STC')
+#plt.xlabel('?')
+#plt.ylabel('?')

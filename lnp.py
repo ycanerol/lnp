@@ -63,4 +63,11 @@ def stc(spikes, stimulus, filter_length, total_frames, dt):
             # Project out the STA from snippets
             snpta = np.array(snippet-sta_temp)[np.newaxis, :]
             covariance = covariance+np.dot(snpta.T, snpta)*spikes[i]
-    return covariance/(sum(spikes)-1)
+    covariance = covariance/(sum(spikes)-1)
+    eigenvalues, eigenvectors = np.linalg.eig(covariance)
+
+    sorted_eig = np.argsort(eigenvalues)[::-1]
+    eigenvalues = eigenvalues[sorted_eig]
+    eigenvectors = eigenvectors[:, sorted_eig]
+
+    return eigenvalues, eigenvectors
