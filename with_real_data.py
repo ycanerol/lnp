@@ -10,7 +10,7 @@ Analysis of real data
 Importing lnp only works if the directory containing LNP functions is added to
 the python path variable like the following.
 
-sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations \
+sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations\
 /LR3 Gollisch/scripts/')
 
 This only needs to be done once.
@@ -62,17 +62,35 @@ sta = lnp.sta(spikes, stimulus, filter_length, total_frames)[0]
 generator = np.convolve(sta, stimulus,
                         mode='full')[:-filter_length+1]
 
-logbins_sta, spikecount_in_logbins_sta = lnp.q_nlt_recovery(spikes, generator,
+bins_sta, spikecount_sta = lnp.q_nlt_recovery(spikes, generator,
                                                             60, dt)
 
 plt.plot(sta)
 plt.show()
-plt.scatter(logbins_sta,spikecount_in_logbins_sta,s=6,alpha=.6)
+plt.plot(bins_sta,spikecount_sta,'.',alpha=.6)
 plt.show()
 #%%
-w, v = lnp.stc(spikes, stimulus, filter_length, total_frames, dt)
+w, v, bins_stc, spikecount_stc = lnp.stc(spikes, stimulus,
+                                         filter_length, total_frames, dt)
+
+#eigen_indices = [0, 1, -2, -1]  # First two, last two eigenvalues
+#
+#bin_nr = 60
+#           
+#generator_stc = np.zeros((total_frames, len(eigen_indices)))
+#bins_stc = np.zeros((bin_nr, len(eigen_indices)))
+#spikecount_stc = np.zeros((bin_nr, len(eigen_indices)))
+#
+#for i in range(len(eigen_indices)):
+#    generator_stc[:, i] = np.convolve(v[:, eigen_indices[i]], stimulus,
+#                                      mode='full')[:-filter_length+1]
+#    bins_stc[:, i], spikecount_stc[:, i] = lnp.q_nlt_recovery(spikes,
+#                                                              generator_stc[: ,i],
+#                                                              60, dt)
+plt.plot(bins_stc, spikecount_stc)
 
 
+plt.plot(w,'.')
 #
 #eigen_indices=np.where(np.abs(w-1)>.05)[0]
 #manual_eigen_indices = [0, -1]

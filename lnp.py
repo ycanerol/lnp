@@ -51,7 +51,8 @@ def q_nlt_recovery(spikes, filtered_recovery, bin_nr, dt):
     return quantiles, spikecount_in_bins
 
 
-def stc(spikes, stimulus, filter_length, total_frames, dt):
+def stc(spikes, stimulus, filter_length, total_frames, dt,
+        eigen_indices=[0, 1, -2, -1], bin_nr=60):
     covariance = np.zeros((filter_length, filter_length))
     sta_temp = sta(spikes, stimulus, filter_length, total_frames)[1]
     # Unscaled STA
@@ -70,4 +71,16 @@ def stc(spikes, stimulus, filter_length, total_frames, dt):
     eigenvalues = eigenvalues[sorted_eig]
     eigenvectors = eigenvectors[:, sorted_eig]
 
-    return eigenvalues, eigenvectors
+    # Calculating nonlinearities
+    generator_stc = np.zeros((total_frames, len(eigen_indices)))
+    bins_stc = np.zeros((bin_nr, len(eigen_indices)))
+    spikecount_stc = np.zeros((bin_nr, len(eigen_indices)))
+
+    for i in range(len(eigen_indices)):
+        generator_stc[:, i] = np.convolve(eigenvectors[:, eigen_indices[i]],
+                                          stimulus,
+                                          mode='full')[:-filter_length+1]
+        bins_stc[:, i], spikecount_stc[:, i] = \
+                q_nlt_recovery(spikes, generator_stc[:, i], 60, dt)
+
+    return eigenvalues, eigenvectors, bins_stc, spikecount_stc

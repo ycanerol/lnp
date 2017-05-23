@@ -43,7 +43,7 @@ manual_eigen_indices = [0, -1]
 filtered_recovery_stc1 = np.convolve(v[:, eigen_indices[0]], stimulus,
                                      mode='full')[:-filter_length+1]
 
-filtered_recovery_stc2 = np.convolve(v[:, eigen_indices[0]], stimulus,
+filtered_recovery_stc2 = np.convolve(v[:, eigen_indices[1]], stimulus,
                                      mode='full')[:-filter_length+1]
 
 logbins_stc1, spikecount_in_logbins_stc1 = log_nlt_recovery(spikes,
