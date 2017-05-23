@@ -28,6 +28,7 @@ main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/LR3 Gollisch/
 stimulus_path = 'fff2h'
 frames_path = 'Experiments/Salamander/2014_01_21/frametimes/2_fff2blinks_frametimings.mat'
 spike_path = 'Experiments/Salamander/2014_01_21/rasters/2_SP_C101.txt'
+save_path = '/Users/ycan/Desktop/fig.png'
 
 f = h5py.File(main_dir+frames_path, 'r')
 ftimes = (np.array(f.get('ftimes'))/1000)[:, 0]
@@ -63,45 +64,44 @@ generator = np.convolve(sta, stimulus,
                         mode='full')[:-filter_length+1]
 
 bins_sta, spikecount_sta = lnp.q_nlt_recovery(spikes, generator,
-                                                            60, dt)
+                                              60, dt)
 
-plt.plot(sta)
+eigen_indices = [0, 1, -2, -1]
+bin_nr = 60
+
+w, v, bins_stc, spikecount_stc, eigen_legends = lnp.stc(spikes, stimulus,
+                                                        filter_length,
+                                                        total_frames, dt,
+                                                        eigen_indices, bin_nr)
+
+# %%
+rows = 1
+columns = 3
+fig = plt.figure(figsize=(20, 5))
+
+plt.subplot(rows, columns, 1)
+plt.plot(sta, ':')
+plt.plot(v[:, eigen_indices])
+plt.title('Filters')
+plt.legend(['STA']+eigen_legends, fontsize='x-small')
+plt.xticks(np.linspace(0, filter_length, filter_length/2+1))
+plt.xlabel('Time')
+plt.ylabel('Relative filter strength')
+
+plt.subplot(rows, columns, 2)
+plt.plot(bins_sta, spikecount_sta, '.', alpha=.6)
+plt.plot(bins_stc, spikecount_stc, '.', alpha=.6)
+plt.title('Non-linearities')
+plt.legend(['STA']+eigen_legends, fontsize='x-small')
+plt.xlabel('Linear output')
+plt.ylabel('Firing rate')
+
+plt.subplot(rows, columns, 3)
+
+plt.plot(w, 'o')
+plt.title('Eigenvalues of covariance matrix')
+plt.xlabel('Eigenvalue index')
+plt.ylabel('Variance')
+
+plt.savefig(save_path, dpi=200, bbox_inches='tight')
 plt.show()
-plt.plot(bins_sta,spikecount_sta,'.',alpha=.6)
-plt.show()
-#%%
-w, v, bins_stc, spikecount_stc = lnp.stc(spikes, stimulus,
-                                         filter_length, total_frames, dt)
-
-#eigen_indices = [0, 1, -2, -1]  # First two, last two eigenvalues
-#
-#bin_nr = 60
-#           
-#generator_stc = np.zeros((total_frames, len(eigen_indices)))
-#bins_stc = np.zeros((bin_nr, len(eigen_indices)))
-#spikecount_stc = np.zeros((bin_nr, len(eigen_indices)))
-#
-#for i in range(len(eigen_indices)):
-#    generator_stc[:, i] = np.convolve(v[:, eigen_indices[i]], stimulus,
-#                                      mode='full')[:-filter_length+1]
-#    bins_stc[:, i], spikecount_stc[:, i] = lnp.q_nlt_recovery(spikes,
-#                                                              generator_stc[: ,i],
-#                                                              60, dt)
-plt.plot(bins_stc, spikecount_stc)
-
-
-plt.plot(w,'.')
-#
-#eigen_indices=np.where(np.abs(w-1)>.05)[0]
-#manual_eigen_indices = [0, -1]
-#
-#eigen_legends = []
-#for i in manual_eigen_indices:
-#    plt.plot(v[:, i])
-#    eigen_legends.append(str('Eigenvector '+str(i)))
-#plt.plot(sta,':')
-#eigen_legends.append('STA')
-#plt.legend(eigen_legends, fontsize='x-small')
-#plt.title('Filters recovered by STC')
-#plt.xlabel('?')
-#plt.ylabel('?')
