@@ -5,7 +5,7 @@ Created on Mon May 22 14:58:43 2017
 
 @author: ycan
 
-Functions for LNP model
+Functions for LNP model with full field flicker stimulus
 
 Includes STA, STC to be used in data analysis
 

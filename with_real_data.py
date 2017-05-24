@@ -5,11 +5,12 @@ Created on Mon May 22 12:51:21 2017
 
 @author: ycan
 
-Analysis of real data
+Analysis of real data with full field flicker stimulus
 
 Importing lnp only works if the directory containing LNP functions is added to
 the python path variable like the following.
 
+import sys
 sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations\
 /LR3 Gollisch/scripts/')
 
@@ -74,7 +75,6 @@ for filename in files:
     spike_file.close()
 
     spike_counts = Counter(np.digitize(spike_times, ftimes))
-    spikes = np.zeros(total_frames)
     spikes = np.array([spike_counts[i] for i in range(total_frames)])
     # Bin spikes
 
