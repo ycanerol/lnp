@@ -81,8 +81,13 @@ def stc(spikes, stimulus, filter_length, total_frames, dt,
         generator_stc[:, i] = np.convolve(eigenvectors[:, eigen_indices[i]],
                                           stimulus,
                                           mode='full')[:-filter_length+1]
-        bins_stc[:, i], spikecount_stc[:, i] = \
-                q_nlt_recovery(spikes, generator_stc[:, i], 60, dt)
-        eigen_legends.append('Eigenvector {}'.format(int(eigen_indices[i])))
+        bins_stc[:, i],\
+        spikecount_stc[:, i] = q_nlt_recovery(spikes,
+                                              generator_stc[:, i], 60, dt)
+        if eigen_indices[i] < 0:
+            eigen_legends.append('Eigenvector {}'
+                                 .format(filter_length+int(eigen_indices[i])))
+        else:
+            eigen_legends.append('Eigenvector {}'.format(int(eigen_indices[i])))
 
     return eigenvalues, eigenvectors, bins_stc, spikecount_stc, eigen_legends
