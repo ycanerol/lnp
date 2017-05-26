@@ -5,6 +5,9 @@ Created on Wed May 24 16:03:08 2017
 
 @author: ycan
 
+If you get the following error, run the import block below.
+ModuleNotFoundError: No module named 'lnp_checkerflicker'
+
 import sys
 sys.path.append('/Users/ycan/Documents/official/gottingen/\
 lab rotations/LR3 Gollisch/RandPy')
@@ -52,10 +55,14 @@ for filename in files:
         f.close()
 
         total_frames = ftimes.shape[0]
+        total_frames = int(total_frames)/5  # To speed up calculation
+        ftimes = ftimes[:total_frames]       # To speed up calculation
         filter_length = 20  # Specified in nr of frames
 
-        rnd_numbers, seed = randpy.ran1(-10000, int(total_frames/10)*sx*sy)
-        rnd_numbers = np.array(rnd_numbers).reshape(sx, sy, int(total_frames/10))
+        rnd_numbers, seed = randpy.ran1(-10000, total_frames*sx*sy)
+        rnd_numbers = np.round(rnd_numbers).reshape(sx, sy, 
+                               total_frames, order='F')
+        stimulus = rnd_numbers
 
         first_run_flag = False
 
@@ -69,4 +76,15 @@ for filename in files:
     spike_counts = Counter(np.digitize(spike_times, ftimes))
     spikes = np.array([spike_counts[i] for i in range(total_frames)])
 
-
+    sta_scaled, sta_unscaled, max_i, temporal = lnpc.sta(spikes,
+                                                         stimulus,
+                                                         filter_length,
+                                                         total_frames)
+    plt.figure(figsize=(15, 15), dpi=200)
+    for i in range(20):
+        plt.subplot(4, 5, i+1)
+        plt.imshow(sta_unscaled[:, :, i], cmap='Greys')
+    plt.show()
+    
+    plt.plot(temporal)
+    plt.imshow(sta_scaled[max_i[0],38:42,3],cmap='Greys')
