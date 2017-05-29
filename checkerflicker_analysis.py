@@ -55,13 +55,15 @@ for filename in files:
         f.close()
 
         total_frames = ftimes.shape[0]
-        total_frames = int(total_frames)/5  # To speed up calculation
+        
+        total_frames = int(total_frames/5)  # To speed up calculation
         ftimes = ftimes[:total_frames]       # To speed up calculation
         filter_length = 20  # Specified in nr of frames
 
         rnd_numbers, seed = randpy.ran1(-10000, total_frames*sx*sy)
-        rnd_numbers = np.round(rnd_numbers).reshape(sx, sy, 
-                               total_frames, order='F')
+        rnd_numbers = np.array(rnd_numbers).reshape(sx, sy, 
+                                          total_frames, order='F')
+        rnd_numbers = np.where(rnd_numbers > .5, 1 , -1)
         stimulus = rnd_numbers
 
         first_run_flag = False
@@ -83,8 +85,16 @@ for filename in files:
     plt.figure(figsize=(15, 15), dpi=200)
     for i in range(20):
         plt.subplot(4, 5, i+1)
-        plt.imshow(sta_unscaled[:, :, i], cmap='Greys')
+        plt.imshow(sta_unscaled[:, :, i], cmap='Greys',
+                   vmin=np.min(sta_unscaled),
+                   vmax=np.max(sta_unscaled))
     plt.show()
     
     plt.plot(temporal)
-    plt.imshow(sta_scaled[max_i[0],38:42,3],cmap='Greys')
+    plt.show()
+    f_size = 3
+    plt.imshow(sta_unscaled[max_i[0]-f_size:max_i[0]+f_size+1,
+                          max_i[1]-f_size:max_i[1]+f_size+1,
+                          int(max_i[2])], cmap='Greys',
+                          vmin=np.min(sta_unscaled),
+                          vmax=np.max(sta_unscaled))
