@@ -84,7 +84,7 @@ for filename in files:
                                                          filter_length,
                                                          total_frames)
     
-    
+        
     plt.figure(figsize=(15, 15), dpi=200)
     for i in range(20):
         plt.subplot(4, 5, i+1)

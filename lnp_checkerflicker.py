@@ -26,7 +26,7 @@ def sta(spikes, stimulus, filter_length, total_frames):
     sta_unscaled = snippets/sum(spikes)   # Normalize/scale the STA
     sta_scaled = sta_unscaled/np.sqrt(sum(np.power(sta_unscaled, 2)))
 
-    sta_gaussian = ndi.filters.gaussian_filter(sta_unscaled, sigma=(1,1,0))
+    sta_gaussian = ndi.filters.gaussian_filter(sta_unscaled, sigma=(1, 1, 0))
     # Gaussian is applied before searching for the brightest/darkest pixel
     # to exclude randomly high values outside the receptive field
     max_i = np.array(np.where(np.abs(sta_gaussian) ==
@@ -38,3 +38,13 @@ def sta(spikes, stimulus, filter_length, total_frames):
                  range(max_i[1]-1, max_i[1]+1),
                  int(max_i[2]))
     return sta_scaled, sta_unscaled, max_i, temporal  # Unscaled might be needed for STC
+
+def sta_weighted(sta, max_i, spikes, stimulus, filter_length, total_frames):
+    sx = stimulus.shape[0]
+    sy = stimulus.shape[1]
+    f_size = 5
+    weights = sta[max_i[0]-f_size-1:max_i[0]+f_size,
+                  max_i[1]-f_size-1:max_i[1]+f_size,
+                  max_i[2]].reshape((2*f_size+1, 2*f_size+1))
+    
+    
