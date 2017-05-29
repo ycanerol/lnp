@@ -78,10 +78,13 @@ for filename in files:
     spike_counts = Counter(np.digitize(spike_times, ftimes))
     spikes = np.array([spike_counts[i] for i in range(total_frames)])
 
+#%%
     sta_scaled, sta_unscaled, max_i, temporal = lnpc.sta(spikes,
                                                          stimulus,
                                                          filter_length,
                                                          total_frames)
+    
+    
     plt.figure(figsize=(15, 15), dpi=200)
     for i in range(20):
         plt.subplot(4, 5, i+1)
@@ -89,7 +92,7 @@ for filename in files:
                    vmin=np.min(sta_unscaled),
                    vmax=np.max(sta_unscaled))
     plt.show()
-    
+
     plt.plot(temporal)
     plt.show()
     f_size = 3
