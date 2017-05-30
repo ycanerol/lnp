@@ -101,7 +101,8 @@ for filename in files:
     rows = 1
     columns = 3
     fig = plt.figure(figsize=(20, 5))
-    plt.suptitle('STA and STC analysis for {}'.format(spike_path))
+    plt.suptitle('Full field flicker for {}'.format(
+                    spike_path.split('Experiments')[1]))
 
     plt.subplot(rows, columns, 1)
     plt.plot(sta, ':')
