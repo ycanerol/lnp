@@ -21,8 +21,8 @@ def sta(spikes, stimulus, filter_length, total_frames):
         if spikes[i] != 0:
             snippets = snippets+stimulus[i:i-filter_length:-1]*spikes[i]
             # Snippets are inverted before being added
-    sta_unscaled = snippets/sum(spikes)   # Normalize/scale the STA
-    sta_scaled = sta_unscaled/np.sqrt(sum(np.power(sta_unscaled, 2)))
+    sta_unscaled = snippets/np.sum(spikes)   # Normalize/scale the STA
+    sta_scaled = sta_unscaled/np.sqrt(np.sum(np.power(sta_unscaled, 2)))
     return sta_scaled, sta_unscaled  # Unscaled might be needed for STC
 
 

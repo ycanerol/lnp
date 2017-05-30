@@ -23,8 +23,8 @@ def sta(spikes, stimulus, filter_length, total_frames):
             stimulus_reversed = stimulus[:, :, i-filter_length+1:i+1][:,:,::-1]
             snippets = snippets+stimulus_reversed*spikes[i]
             # Snippets are inverted before being added
-    sta_unscaled = snippets/sum(spikes)   # Normalize/scale the STA
-    sta_scaled = sta_unscaled/np.sqrt(sum(np.power(sta_unscaled, 2)))
+    sta_unscaled = snippets/np.sum(spikes)   # Normalize/scale the STA
+    sta_scaled = sta_unscaled/np.sqrt(np.sum(np.power(sta_unscaled, 2)))
 
     sta_gaussian = ndi.filters.gaussian_filter(sta_unscaled, sigma=(1, 1, 0))
     # Gaussian is applied before searching for the brightest/darkest pixel
@@ -37,14 +37,22 @@ def sta(spikes, stimulus, filter_length, total_frames):
     spatial_i = (range(max_i[0]-1, max_i[0]+1),
                  range(max_i[1]-1, max_i[1]+1),
                  int(max_i[2]))
-    return sta_scaled, sta_unscaled, max_i, temporal  # Unscaled might be needed for STC
+    return sta_scaled, sta_unscaled, max_i, temporal  
+    # Unscaled might be needed for STC
 
-def sta_weighted(sta, max_i, spikes, stimulus, filter_length, total_frames):
+
+def stim_weighted(sta, max_i, stimulus):
+    # Turns the checkerflicker stimulus into more Gaussian-likeß
     sx = stimulus.shape[0]
     sy = stimulus.shape[1]
     f_size = 5
     weights = sta[max_i[0]-f_size-1:max_i[0]+f_size,
                   max_i[1]-f_size-1:max_i[1]+f_size,
                   max_i[2]].reshape((2*f_size+1, 2*f_size+1))
-    
-    
+
+    stim_weighed = []
+    for i in range(stim_small.shape[2]):
+        stim_weighed = np.append(stim_weighed, np.sum(stim_small[:,:,i] * 
+                                                      weights))
+    return stim_weighed
+        

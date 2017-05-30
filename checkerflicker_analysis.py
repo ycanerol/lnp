@@ -21,6 +21,7 @@ from collections import Counter
 import matplotlib.pyplot as plt
 # Custom packages
 import lnp_checkerflicker as lnpc
+import lnp
 import randpy
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
@@ -84,8 +85,13 @@ for filename in files:
                                                          filter_length,
                                                          total_frames)
     
-        
-    plt.figure(figsize=(15, 15), dpi=200)
+    stim_gaus = stim_weighted(sta_unscaled, max_i, stimulus)
+    
+    sta_weighted = lnp.sta(spikes, stim_gaus, filter_length, total_frames)
+    
+    
+    plt.figure(figsize=(15, 10), dpi=200)
+    plt.title('STA for cell {}'.format(filename))
     for i in range(20):
         plt.subplot(4, 5, i+1)
         plt.imshow(sta_unscaled[:, :, i], cmap='Greys',
@@ -93,11 +99,24 @@ for filename in files:
                    vmax=np.max(sta_unscaled))
     plt.show()
 
-    plt.plot(temporal)
-    plt.show()
-    f_size = 3
+    plt.figure(figsize=(8, 6))
+    plt.subplot(1, 2, 1)
+    plt.imshow(sta_unscaled[:, :, max_i[2]].reshape((sx, sy,)), cmap='Greys',
+               vmin=np.min(sta_unscaled),
+               vmax=np.max(sta_unscaled))
+    plt.subplot(1, 2, 2)
+    f_size = 5
     plt.imshow(sta_unscaled[max_i[0]-f_size:max_i[0]+f_size+1,
-                          max_i[1]-f_size:max_i[1]+f_size+1,
-                          int(max_i[2])], cmap='Greys',
-                          vmin=np.min(sta_unscaled),
-                          vmax=np.max(sta_unscaled))
+                            max_i[1]-f_size:max_i[1]+f_size+1,
+                            int(max_i[2])],
+               cmap='Greys',
+               vmin=np.min(sta_unscaled),
+               vmax=np.max(sta_unscaled))
+    plt.title('Brightest pixel: {}'.format(max_i.T))
+    plt.show()
+
+    plt.plot(temporal)
+    plt.title('Temporal component of the brightest pixel')
+    plt.show()
+
+
