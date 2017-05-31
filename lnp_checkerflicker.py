@@ -24,7 +24,6 @@ def sta(spikes, stimulus, filter_length, total_frames):
             snippets = snippets+stimulus_reversed*spikes[i]
             # Snippets are inverted before being added
     sta_unscaled = snippets/np.sum(spikes)   # Normalize/scale the STA
-    sta_scaled = sta_unscaled/np.sqrt(np.sum(np.power(sta_unscaled, 2)))
 
     sta_gaussian = ndi.filters.gaussian_filter(sta_unscaled, sigma=(1, 1, 0))
     # Gaussian is applied before searching for the brightest/darkest pixel
@@ -36,7 +35,7 @@ def sta(spikes, stimulus, filter_length, total_frames):
     spatial_i = (range(max_i[0]-1, max_i[0]+1),
                  range(max_i[1]-1, max_i[1]+1),
                  int(max_i[2]))
-    return sta_scaled, sta_unscaled, max_i, temporal
+    return sta_unscaled, max_i, temporal
     # Unscaled might be needed for STC
 
 
@@ -57,10 +56,11 @@ def stim_weighted(sta, max_i, stimulus):
     return stim_weighed
 
 
-def nlt_recovery(spikes, filtered_recovery, bin_nr, dt):
-    quantiles = mquantiles(filtered_recovery,
+def nlt_recovery(spikes, stimulus, sta, bin_nr, dt):
+    generator = np.convolve(sta, stimulus, mode='full')[:-sta.size+1]
+    quantiles = mquantiles(generator,
                            np.linspace(0, 1, bin_nr, endpoint=False))
-    bindices = np.digitize(filtered_recovery, quantiles)
+    bindices = np.digitize(generator, quantiles)
     # Returns which bin each should go
     spikecount_in_bins = np.array([])
     for i in range(bin_nr):  # Sorts values into bins
@@ -92,17 +92,17 @@ def stc(spikes, stimulus, filter_length, total_frames, dt,
     spikecount_stc = np.zeros((bin_nr, len(eigen_indices)))
     eigen_legends = []
 
-    for i in range(len(eigen_indices)):
-        generator_stc[:, i] = np.convolve(eigenvectors[:, eigen_indices[i]],
-                                          stimulus,
-                                          mode='full')[:-filter_length+1]
-        bins_stc[:, i],\
-        spikecount_stc[:, i] = nlt_recovery(spikes,
-                                            generator_stc[:, i], 60, dt)
-        if eigen_indices[i] < 0:
-            eigen_legends.append('Eigenvector {}'
-                                 .format(filter_length+int(eigen_indices[i])))
-        else:
-            eigen_legends.append('Eigenvector {}'.format(int(eigen_indices[i])))
+#    for i in range(len(eigen_indices)):
+#        generator_stc[:, i] = np.convolve(eigenvectors[:, eigen_indices[i]],
+#                                          stimulus,
+#                                          mode='full')[:-filter_length+1]
+#        bins_stc[:, i],\
+#        spikecount_stc[:, i] = nlt_recovery(spikes,
+#                                            generator_stc[:, i], 60, dt)
+#        if eigen_indices[i] < 0:
+#            eigen_legends.append('Eigenvector {}'
+#                                 .format(filter_length+int(eigen_indices[i])))
+#        else:
+#            eigen_legends.append('Eigenvector {}'.format(int(eigen_indices[i])))
 
     return eigenvalues, eigenvectors, bins_stc, spikecount_stc, eigen_legends

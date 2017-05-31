@@ -43,7 +43,7 @@ for line in f:
     if int(c) < 4:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
-files = ['101']  # Use only one file for testing purposes
+#files = ['101']  # Use only one file for testing purposes
 
 first_run_flag = True
 
@@ -77,7 +77,7 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
     spikes = np.array([spike_counts[i] for i in range(total_frames)])
 
 # %%
-    _, sta_unscaled, max_i, temporal = lnpc.sta(spikes,
+    sta_unscaled, max_i, temporal = lnpc.sta(spikes,
                                                          stimulus,
                                                          filter_length,
                                                          total_frames)
@@ -89,10 +89,12 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
     w, v, bins_stc, spikecount_stc, _ = lnpc.stc(spikes, stim_gaus,
                                                  filter_length,
                                                  total_frames, dt)
-    
-#    generator[0] = np.convolve(sta_unscaled, stimulus,
-#                            mode='full')[:-filter_length+1]
-
+    bins = []
+    spikecounts = []
+    for i in [sta_weighted, v[:, 0]]:
+        a, b = lnpc.nlt_recovery(spikes, stim_gaus, i, 60, dt)
+        bins.append(a)
+        spikecounts.append(b)
     
 # %%
     plt.figure(figsize=(15, 15), dpi=200)
@@ -109,16 +111,17 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
             spike_path.split('Experiments')[1]))
 
     plt.subplot(2, 2, 1)
-    plt.plot(temporal)
     plt.plot(sta_weighted)
     plt.plot(v[:, 0])
-    plt.title('STA')
-    plt.legend(['Brightest px', 'Weighted stimulus', 'Eigenvalue 0'])
+    plt.plot(temporal)
+    plt.title('Recovered filters')
+    plt.legend(['Weighted stimulus', 'Eigenvalue 0', 'Temporal component'])
 
     plt.subplot(2, 2, 2)
-
-    plt.legend(['', '', ''])
-    plt.title('Non-linearities')
+    for i in range(len(bins)):
+        plt.plot(bins[i], spikecounts[i], '.')
+    plt.legend(['Weigted STA', 'STC'])
+    plt.title('Recovered non-linearities')
     plt.xlabel('Linear output')
     plt.ylabel('Variance')
 
