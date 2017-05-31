@@ -34,11 +34,11 @@ cluster_save = main_dir+'clusterSave.txt'
 
 if stimulus_type == 2:
     stimulus_path = '/Users/ycan/Documents/official/gottingen/\
-lab rotations/LR3 Gollisch/data/fff2h'
+lab rotations/LR3 Gollisch/data/fff2h.npy'
     frames_path = 'frametimes/2_fff2blinks_frametimings.mat'
 elif stimulus_type == 3:
     stimulus_path = '/Users/ycan/Documents/official/gottingen/\
-lab rotations/LR3 Gollisch/data/checkerflicker'
+lab rotations/LR3 Gollisch/data/checkerflickerstimulus.npy'
     frames_path = 'frametimes/3_checkerflicker10x10bw2blinks_frametimings.mat'
 
 f = open(cluster_save, 'r')
@@ -62,9 +62,7 @@ for filename in files:
         total_frames = ftimes.shape[0]
         filter_length = 20  # Specified in nr of frames
 
-        stimulus_file = open(stimulus_path)
-        stimulus = np.array([float(line) for line in stimulus_file])[:total_frames]
-        stimulus_file.close()
+        stimulus = np.load(stimulus_path)[:total_frames]
         first_run_flag = False
 
     spike_path = main_dir+'rasters/'+str(stimulus_type)+'_SP_C'+filename+'.txt'

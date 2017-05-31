@@ -55,8 +55,9 @@ for filename in files:
         # Average difference between two frames in miliseconds
         f.close()
 
+        divide_by = 1
         total_frames = ftimes.shape[0]
-        total_frames = int(total_frames/5)  # To speed up calculation
+        total_frames = int(total_frames/divide_by)  # To speed up calculation
         ftimes = ftimes[:total_frames]       # To speed up calculation
         filter_length = 20  # Specified in nr of frames
 
@@ -64,8 +65,9 @@ for filename in files:
         rnd_numbers = np.array(rnd_numbers).reshape(sx, sy,
                                                     total_frames,
                                                     order='F')
-        rnd_numbers = np.where(rnd_numbers > .5, 1, -1)
+        rnd_numbers = np.array(np.where(rnd_numbers > .5, 1, -1), dtype='int8')
         stimulus = rnd_numbers
+        del rnd_numbers
 
         first_run_flag = False
 
@@ -80,7 +82,7 @@ for filename in files:
     spikes = np.array([spike_counts[i] for i in range(total_frames)])
 
 # %%
-    sta_scaled, sta_unscaled, max_i, temporal = lnpc.sta(spikes,
+    _, sta_unscaled, max_i, temporal = lnpc.sta(spikes,
                                                          stimulus,
                                                          filter_length,
                                                          total_frames)
@@ -92,7 +94,11 @@ for filename in files:
     w, v, bins_stc, spikecount_stc, _ = lnpc.stc(spikes, stim_gaus,
                                                  filter_length,
                                                  total_frames, dt)
+    
+#    generator[0] = np.convolve(sta_unscaled, stimulus,
+#                            mode='full')[:-filter_length+1]
 
+    
 # %%
     plt.figure(figsize=(15, 15), dpi=200)
     plt.title('STA for cell {}'.format(filename))
@@ -101,23 +107,6 @@ for filename in files:
         plt.imshow(sta_unscaled[:, :, i], cmap='Greys',
                    vmin=np.min(sta_unscaled),
                    vmax=np.max(sta_unscaled))
-    plt.show()
-
-    plt.figure(figsize=(8, 6), dpi=200)
-    plt.subplot(1, 2, 1)
-    plt.imshow(sta_unscaled[:, :, max_i[2]].reshape((sx, sy,)), cmap='Greys',
-               vmin=np.min(sta_unscaled),
-               vmax=np.max(sta_unscaled))
-    plt.title('Receptive field')
-    plt.subplot(1, 2, 2)
-    f_size = 5
-    plt.imshow(sta_unscaled[max_i[0]-f_size:max_i[0]+f_size+1,
-                            max_i[1]-f_size:max_i[1]+f_size+1,
-                            int(max_i[2])],
-               cmap='Greys',
-               vmin=np.min(sta_unscaled),
-               vmax=np.max(sta_unscaled))
-    plt.title('Brightest pixel: {}'.format(max_i))
     plt.show()
 
     plt.figure(figsize=(15, 10), dpi=200)
