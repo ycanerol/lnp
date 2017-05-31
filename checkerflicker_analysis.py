@@ -9,20 +9,24 @@ If you get the following error, run the import block below.
 ModuleNotFoundError: No module named 'lnp_checkerflicker'
 
 import sys
-sys.path.append('/Users/ycan/Documents/official/gottingen/\
-lab rotations/LR3 Gollisch/RandPy')
 sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations\
 /LR3 Gollisch/scripts/')
 
 """
+import sys
 import h5py
 import numpy as np
 from collections import Counter
 import matplotlib.pyplot as plt
 # Custom packages
-import lnp_checkerflicker as lnpc
-import lnp
-import randpy
+try:
+    import lnp_checkerflicker as lnpc
+    import lnp
+except:
+    sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations\
+/LR3 Gollisch/scripts/')
+    import lnp_checkerflicker as lnpc
+    import lnp
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/data/Experiments/Salamander/2014_01_21/'
@@ -43,7 +47,7 @@ for line in f:
     if int(c) < 4:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
-#files = ['101']  # Use only one file for testing purposes
+files = ['101']  # Use only one file for testing purposes
 
 first_run_flag = True
 
