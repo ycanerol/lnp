@@ -29,12 +29,10 @@ def sta(spikes, stimulus, filter_length, total_frames):
     # Gaussian is applied before searching for the brightest/darkest pixel
     # to exclude randomly high values outside the receptive field
     max_i = np.squeeze(np.where(np.abs(sta_gaussian) ==
-                              np.max(np.abs(sta_gaussian))))
+                                np.max(np.abs(sta_gaussian))))
     temporal = sta_unscaled[max_i[0], max_i[1], :].reshape(20,)
     temporal = temporal / np.sqrt(np.sum(np.power(temporal, 2)))
-    spatial_i = (range(max_i[0]-1, max_i[0]+1),
-                 range(max_i[1]-1, max_i[1]+1),
-                 int(max_i[2]))
+
     return sta_unscaled, max_i, temporal
     # Unscaled might be needed for STC
 
@@ -48,7 +46,7 @@ def stim_weighted(sta, max_i, stimulus):
     if weights.max() < np.max(np.abs(weights)):
         weights = -weights
     stim_small = stimulus[max_i[0]-f_size-1:max_i[0]+f_size,
-                          max_i[1]-f_size-1:max_i[1]+f_size,:]
+                          max_i[1]-f_size-1:max_i[1]+f_size, :]
     stim_weighed = np.array([])
     for i in range(stim_small.shape[2]):
         stim_weighed = np.append(stim_weighed, np.sum(stim_small[:, :, i] *
@@ -91,18 +89,5 @@ def stc(spikes, stimulus, filter_length, total_frames, dt,
     bins_stc = np.zeros((bin_nr, len(eigen_indices)))
     spikecount_stc = np.zeros((bin_nr, len(eigen_indices)))
     eigen_legends = []
-
-#    for i in range(len(eigen_indices)):
-#        generator_stc[:, i] = np.convolve(eigenvectors[:, eigen_indices[i]],
-#                                          stimulus,
-#                                          mode='full')[:-filter_length+1]
-#        bins_stc[:, i],\
-#        spikecount_stc[:, i] = nlt_recovery(spikes,
-#                                            generator_stc[:, i], 60, dt)
-#        if eigen_indices[i] < 0:
-#            eigen_legends.append('Eigenvector {}'
-#                                 .format(filter_length+int(eigen_indices[i])))
-#        else:
-#            eigen_legends.append('Eigenvector {}'.format(int(eigen_indices[i])))
 
     return eigenvalues, eigenvectors, bins_stc, spikecount_stc, eigen_legends
