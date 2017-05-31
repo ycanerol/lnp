@@ -61,13 +61,8 @@ for filename in files:
         ftimes = ftimes[:total_frames]       # To speed up calculation
         filter_length = 20  # Specified in nr of frames
 
-        rnd_numbers, seed = randpy.ran1(-10000, total_frames*sx*sy)
-        rnd_numbers = np.array(rnd_numbers).reshape(sx, sy,
-                                                    total_frames,
-                                                    order='F')
-        rnd_numbers = np.array(np.where(rnd_numbers > .5, 1, -1), dtype='int8')
-        stimulus = rnd_numbers
-        del rnd_numbers
+        stimulus = np.load('/Users/ycan/Documents/official/gottingen/lab \
+rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
 
         first_run_flag = False
 
