@@ -53,6 +53,7 @@ def q_nlt_recovery(spikes, filtered_recovery, bin_nr, dt):
 
 def stc(spikes, stimulus, filter_length, total_frames, dt,
         eigen_indices=[0, 1, -2, -1], bin_nr=60):
+    # Gives non-centered STC
     covariance = np.zeros((filter_length, filter_length))
     sta_temp = sta(spikes, stimulus, filter_length, total_frames)[1]
     # Unscaled STA
@@ -62,7 +63,8 @@ def stc(spikes, stimulus, filter_length, total_frames, dt,
             # Snippets are inverted before being added
             snippet = snippet-np.dot(snippet, sta_temp)*sta_temp
             # Project out the STA from snippets
-            snpta = np.array(snippet-sta_temp)[np.newaxis, :]
+            # snpta = np.array(snippet-sta_temp)[np.newaxis, :] Centered STC
+            snpta = np.array(snippet)[np.newaxis, :]  # Non-centered STC
             covariance = covariance+np.dot(snpta.T, snpta)*spikes[i]
     covariance = covariance/(sum(spikes)-1)
     eigenvalues, eigenvectors = np.linalg.eig(covariance)
