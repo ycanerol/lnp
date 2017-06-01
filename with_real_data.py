@@ -17,19 +17,24 @@ sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations\
 This only needs to be done once.
 
 """
-
+import sys
 import h5py
 import numpy as np
-import lnp
 from collections import Counter
 import matplotlib.pyplot as plt
+try:
+    import lnp
+except:
+    sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations\
+/LR3 Gollisch/scripts/')
+    import lnp
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/data/Experiments/Salamander/2014_01_21/'
 stimulus_type = 2
 # Change stimulus type:
 # full field flicker is 2
-# checkeflicker is 3
+# checkerflicker is 3
 cluster_save = main_dir+'clusterSave.txt'
 
 if stimulus_type == 2:
@@ -49,6 +54,8 @@ for line in f:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
 
+
+files=['101','102']
 first_run_flag = True
 
 for filename in files:
@@ -66,7 +73,7 @@ for filename in files:
         first_run_flag = False
 
     spike_path = main_dir+'rasters/'+str(stimulus_type)+'_SP_C'+filename+'.txt'
-    save_path = main_dir+'analyzed/'+str(stimulus_type)+'_SP_C'+filename+'.png'
+    save_path = main_dir+'analyzed/'+str(stimulus_type)+'_SP_C'+filename
 
     spike_file = open(spike_path)
     spike_times = np.array([float(line) for line in spike_file])
@@ -94,7 +101,7 @@ for filename in files:
                                                             total_frames, dt,
                                                             eigen_indices,
                                                             bin_nr)
-
+    
     # %%
     rows = 1
     columns = 3
@@ -128,3 +135,16 @@ for filename in files:
 
     plt.savefig(save_path, dpi=200, bbox_inches='tight')
     plt.close()
+
+    np.savez(save_path,
+             sta=sta,
+             stimulus_type=stimulus_type,
+             total_frames=total_frames,
+             spikecount_sta=spikecount_sta,
+             spikecount_stc=spikecount_stc,
+             bins_sta=bins_sta,
+             bins_stc=bins_stc,
+             v=v,
+             w=w,
+             spike_path=spike_path,
+             )
