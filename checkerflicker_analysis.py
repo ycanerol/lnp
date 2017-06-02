@@ -91,16 +91,22 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
         a, b = lnpc.nlt_recovery(spikes, stim_gaus, i, 60, dt)
         bins.append(a)
         spike_counts_in_bins.append(b)
+     
+    sta_weighted, bins[0],\
+    spike_counts_in_bins[0],\
+    peak, onoffindex = lnpc.onoffindex(sta_weighted, bins[0], 
+                                       spike_counts_in_bins[0])
 
 # %%
-    plt.figure(figsize=(15, 15), dpi=200)
-    plt.title('STA for cell {}'.format(filename))
-    for i in range(20):
-        plt.subplot(4, 5, i+1)
-        plt.imshow(sta_unscaled[:, :, i], cmap='Greys',
-                   vmin=np.min(sta_unscaled),
-                   vmax=np.max(sta_unscaled))
-    plt.show()
+    if False:  # change if you need STA to be plotted
+        plt.figure(figsize=(15, 15), dpi=200)
+        plt.title('STA for cell {}'.format(filename))
+        for i in range(20):
+            plt.subplot(4, 5, i+1)
+            plt.imshow(sta_unscaled[:, :, i], cmap='Greys',
+                       vmin=np.min(sta_unscaled),
+                       vmax=np.max(sta_unscaled))
+        plt.show()
 
     plt.figure(figsize=(15, 10), dpi=200)
     plt.suptitle('Checkerflicker for {}'.format(
@@ -110,9 +116,11 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
     plt.plot(sta_weighted)
     plt.plot(v[:, 0])
     plt.plot(temporal)
+    plt.axvline(peak,linewidth=1,color='r',linestyle='dashed')
     plt.title('Recovered filters')
     plt.xticks(np.linspace(0, filter_length, filter_length/2+1))
-    plt.legend(['Weighted stimulus', 'Eigenvalue 0', 'Temporal component'])
+    plt.legend(['Weighted stimulus', 'Eigenvalue 0', 'Temporal component'
+                ,'Peak'])
 
     plt.subplot(2, 2, 2)
     for i in range(len(bins)):
