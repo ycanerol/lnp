@@ -42,7 +42,7 @@ for line in f:
     if int(c) < 4:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
-files = ['101', '102', '103']  # Use only one file for testing purposes
+#files = ['101', '102', '103']  # Use only one file for testing purposes
 
 first_run_flag = True
 
@@ -83,7 +83,8 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
 
     sta_weighted, _ = lnp.sta(spikes, stim_gaus, filter_length, total_frames)
 
-    w, v, _, _, _ = lnpc.stc(spikes, stim_gaus, filter_length, total_frames, dt)
+    w, v, _, _, _ = lnpc.stc(spikes, stim_gaus, 
+                             filter_length, total_frames, dt)
 
     bins = []
     spike_counts_in_bins = []
@@ -91,11 +92,15 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
         a, b = lnpc.nlt_recovery(spikes, stim_gaus, i, 60, dt)
         bins.append(a)
         spike_counts_in_bins.append(b)
-     
-    sta_weighted, bins[0],\
-    spike_counts_in_bins[0],\
-    peak, onoffindex = lnpc.onoffindex(sta_weighted, bins[0], 
+
+    sta_weighted, bins[0], \
+    spike_counts_in_bins[0], \
+    peak, onoffindex = lnpc.onoffindex(sta_weighted, bins[0],
                                        spike_counts_in_bins[0])
+
+    v[:, 0], bins[1],\
+    spike_counts_in_bins[1], _, _ = lnpc.onoffindex(v[:, 0], bins[1],
+                                                    spike_counts_in_bins[1])
 
 # %%
     if False:  # change if you need STA to be plotted
@@ -116,16 +121,20 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
     plt.plot(sta_weighted)
     plt.plot(v[:, 0])
     plt.plot(temporal)
-    plt.axvline(peak,linewidth=1,color='r',linestyle='dashed')
+    plt.axvline(peak, linewidth=1, color='r', linestyle='dashed')
     plt.title('Recovered filters')
     plt.xticks(np.linspace(0, filter_length, filter_length/2+1))
-    plt.legend(['Weighted stimulus', 'Eigenvalue 0', 'Temporal component'
-                ,'Peak'])
+    plt.legend(['Weighted stimulus', 'Eigenvalue 0', 'Temporal component',
+                'Peak'])
 
-    plt.subplot(2, 2, 2)
+    ax = plt.subplot(2, 2, 2)
     for i in range(len(bins)):
-        plt.plot(bins[i], spike_counts_in_bins[i], '.')
-    plt.legend(['Weigted STA', 'STC'])
+        plt.plot(bins[i], spike_counts_in_bins[i], '-')
+    plt.legend(['Weigted stimulus', 'Eigenvector 0'])
+    plt.text(.5, .95, 'On-Off Bias: {:2.2f}'.format(onoffindex),
+             horizontalalignment='center',
+             verticalalignment='center',
+             transform=ax.transAxes)
     plt.title('Recovered non-linearities')
     plt.xlabel('Linear output')
     plt.ylabel('Variance')
@@ -151,11 +160,10 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
     plt.xlabel('Eigenvalue index')
     plt.ylabel('Variance')
 
+    plt.show()
+
     plt.savefig(save_path, dpi=200, bbox_inches='tight')
     plt.close()
-
-#    plt.savefig(save_path, dpi=200, bbox_inches='tight')
-#    plt.close()
 
     np.savez(save_path,
              sta_unscaled=sta_unscaled,
@@ -169,4 +177,5 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
              spike_path=spike_path,
              bins=bins,
              spike_counts_in_bins=spike_counts_in_bins,
+             onoffindex=onoffindex
              )

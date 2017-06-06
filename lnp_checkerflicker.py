@@ -12,7 +12,6 @@ Functions for STA and STC analysis for checkerflicker stimulus
 import numpy as np
 from scipy.stats.mstats import mquantiles
 import scipy.ndimage as ndi
-import peakutils
 
 
 def sta(spikes, stimulus, filter_length, total_frames):
@@ -58,7 +57,7 @@ def stim_weighted(sta, max_i, stimulus):
 def nlt_recovery(spikes, stimulus, sta, bin_nr, dt):
     generator = np.convolve(sta, stimulus, mode='full')[:-sta.size+1]
     quantiles = mquantiles(generator,
-                           np.linspace(0, 1, bin_nr, endpoint=False))
+                           np.linspace(0, 1, bin_nr+1, endpoint=False)[1:])
     bindices = np.digitize(generator, quantiles)
     # Returns which bin each should go
     spikecount_in_bins = np.array([])
@@ -98,13 +97,13 @@ def onoffindex(temporal_filter, bins, spikecount_in_bins):
     # Get peaks of STA/STC
     peak = np.argmax(np.abs(temporal_filter[:7]))
     # Flip if positive
-    if temporal_filter[peak]<0:
-        temporal_filter=-temporal_filter
-        bins = bins[::-1]
+    if temporal_filter[peak] < 0:
+        temporal_filter = -temporal_filter
         spikecount_in_bins = spikecount_in_bins[::-1]
     # integrate non-linearity bin size * fire rate
-    bin_sizes = [bins[i+1]-bins[i] for i in range(len(bins))]
-    spkb = spikecounts_in_bins  # For simplicity's sake
-    fire_rates_mid = [np.average(spkb[i],spkb[i+1]) for i in range(len(spkb))]
+    on_ind = np.where(bins > 0)
+    off_ind = np.where(bins < 0)
+    r_on = np.trapz(spikecount_in_bins[on_ind], bins[on_ind])
+    r_off = np.trapz(spikecount_in_bins[off_ind], bins[off_ind])
+    onoffindex = (r_on-r_off)/(r_on+r_off)
     return temporal_filter, bins, spikecount_in_bins, peak, onoffindex
-    
