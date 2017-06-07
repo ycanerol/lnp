@@ -24,10 +24,12 @@ from collections import Counter
 import matplotlib.pyplot as plt
 try:
     import lnp
+    import lnp_checkerflicker as lnpc
 except:
     sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations\
 /LR3 Gollisch/scripts/')
     import lnp
+    import lnp_checkerflicker as lnpc
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/data/Experiments/Salamander/2014_01_21/'
@@ -55,7 +57,7 @@ for line in f:
 f.close()
 
 
-files=['101','102']
+#files=['101','102']
 first_run_flag = True
 
 for filename in files:
@@ -93,7 +95,7 @@ for filename in files:
     bins_sta, spikecount_sta = lnp.q_nlt_recovery(spikes, generator,
                                                   60, dt)
 
-    eigen_indices = [0, 1, -2, -1]
+    eigen_indices = [0, 1]
     bin_nr = 60
 
     w, v, bins_stc, spikecount_stc, eigen_legends = lnp.stc(spikes, stimulus,
@@ -101,7 +103,14 @@ for filename in files:
                                                             total_frames, dt,
                                                             eigen_indices,
                                                             bin_nr)
-    
+    sta, bins_sta, \
+    spikecount_sta,_ ,_ = lnpc.onoffindex(sta, bins_sta,
+                                       spikecount_sta)
+
+    v[:, 0], bins_stc,\
+    spikecount_stc, peak, onoffindex = lnpc.onoffindex(v[:, 0], bins_stc,
+                                                       spikecount_stc)
+
     # %%
     rows = 1
     columns = 3
@@ -113,14 +122,19 @@ for filename in files:
     plt.plot(sta, ':')
     plt.plot(v[:, eigen_indices])
     plt.title('Filters')
-    plt.legend(['STA']+eigen_legends, fontsize='x-small')
+    plt.axvline(peak, linewidth=1, color='r', linestyle='dashed')
+    plt.legend(['STA']+eigen_legends+['Peak'], fontsize='x-small')
     plt.xticks(np.linspace(0, filter_length, filter_length/2+1))
     plt.xlabel('Time')
     plt.ylabel('Relative filter strength')
 
-    plt.subplot(rows, columns, 2)
-    plt.plot(bins_sta, spikecount_sta, '.', alpha=.6)
-    plt.plot(bins_stc, spikecount_stc, '.', alpha=.6)
+    ax = plt.subplot(rows, columns, 2)
+    plt.plot(bins_sta, spikecount_sta, '-')
+    plt.plot(bins_stc, spikecount_stc, '-')
+    plt.text(.5, .99, 'On-Off Bias: {:2.2f}'.format(onoffindex),
+             horizontalalignment='center',
+             verticalalignment='top',
+             transform=ax.transAxes)
     plt.title('Non-linearities')
     plt.legend(['STA']+eigen_legends, fontsize='x-small')
     plt.xlabel('Linear output')
@@ -130,8 +144,11 @@ for filename in files:
 
     plt.plot(w, 'o')
     plt.title('Eigenvalues of covariance matrix')
+    plt.xticks(np.linspace(0, filter_length, filter_length/2+1))
     plt.xlabel('Eigenvalue index')
     plt.ylabel('Variance')
+
+#    plt.show()
 
     plt.savefig(save_path, dpi=200, bbox_inches='tight')
     plt.close()
@@ -144,6 +161,8 @@ for filename in files:
              spikecount_stc=spikecount_stc,
              bins_sta=bins_sta,
              bins_stc=bins_stc,
+             filename=filename,
+             onoffindex=onoffindex,
              v=v,
              w=w,
              spike_path=spike_path,
