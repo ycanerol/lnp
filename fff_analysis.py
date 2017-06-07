@@ -7,14 +7,6 @@ Created on Mon May 22 12:51:21 2017
 
 Analysis of real data with full field flicker stimulus
 
-Importing lnp only works if the directory containing LNP functions is added to
-the python path variable like the following.
-
-import sys
-sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations\
-/LR3 Gollisch/scripts/')
-
-This only needs to be done once.
 
 """
 import sys
@@ -26,8 +18,8 @@ try:
     import lnp
     import lnp_checkerflicker as lnpc
 except:
-    sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations\
-/LR3 Gollisch/scripts/')
+    sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations/\
+LR3 Gollisch/scripts/')
     import lnp
     import lnp_checkerflicker as lnpc
 
@@ -56,8 +48,8 @@ for line in f:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
 
+#files=['101']
 
-#files=['101','102']
 first_run_flag = True
 
 for filename in files:
@@ -95,7 +87,7 @@ for filename in files:
     bins_sta, spikecount_sta = lnp.q_nlt_recovery(spikes, generator,
                                                   60, dt)
 
-    eigen_indices = [0, 1]
+    eigen_indices = [0]
     bin_nr = 60
 
     w, v, bins_stc, spikecount_stc, eigen_legends = lnp.stc(spikes, stimulus,

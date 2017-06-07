@@ -61,8 +61,6 @@ def stc(spikes, stimulus, filter_length, total_frames, dt,
         if spikes[i] != 0:
             snippet = stimulus[i:i-filter_length:-1]
             # Snippets are inverted before being added
-            snippet = snippet-np.dot(snippet, sta_temp)*sta_temp
-            # Project out the STA from snippets
             # snpta = np.array(snippet-sta_temp)[np.newaxis, :] Centered STC
             snpta = np.array(snippet)[np.newaxis, :]  # Non-centered STC
             covariance = covariance+np.dot(snpta.T, snpta)*spikes[i]

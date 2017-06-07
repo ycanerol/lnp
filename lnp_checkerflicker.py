@@ -124,7 +124,7 @@ def onoffindex(temporal_filter, bins, spikecount_in_bins):
         spikecount_in_bins = spikecount_in_bins[::-1]
     # integrate non-linearity bin size * fire rate
     on_ind = np.where(bins > 0)
-    off_ind = np.where(bins < 0)
+    off_ind = np.where(bins <= 0)
     r_on = np.trapz(spikecount_in_bins[on_ind], bins[on_ind])
     r_off = np.trapz(spikecount_in_bins[off_ind], bins[off_ind])
     onoffindex = (r_on-r_off)/(r_on+r_off)

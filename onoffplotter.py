@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -28,8 +29,9 @@ for i in allfiles:
 onoffindices_f = np.array([])
 onoffindices_c = np.array([])
 
-filenames_f = []
-filenames_c = []
+#files_f = ['2_SP_C6602.npz']  # Full field flicker
+#files_c = []
+
 for i in files_f:
     f = np.load(main_dir+i)
     onoffindices_f = np.append(onoffindices_f, f['onoffindex'])
@@ -40,11 +42,14 @@ for i in files_c:
     filenames_c.append(f['filename'])
 
 # %%
+plt.figure(figsize=(10,6))
 plt.hist(onoffindices_f, bins=np.linspace(-1, 1, num=40), alpha=.6)
 plt.hist(onoffindices_c, bins=np.linspace(-1, 1, num=40), alpha=.6)
 plt.legend(['Full field', 'Checkerflicker'])
 plt.title('Histogram of On Off indices')
 plt.show()
+
+plt.figure(figsize=(8,8))
 plt.scatter(onoffindices_f, onoffindices_c)
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--')
 plt.title('On-Off indices obtained from Full field vs Checkerflicker')
@@ -52,3 +57,5 @@ plt.ylabel('Checkerflicker')
 plt.xlabel('Full field flicker')
 plt.axis('square')
 plt.show()
+
+
