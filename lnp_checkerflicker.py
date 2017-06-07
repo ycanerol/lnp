@@ -37,9 +37,31 @@ def sta(spikes, stimulus, filter_length, total_frames):
     # Unscaled might be needed for STC
 
 
+def check_max_i(sta, max_i):
+    # Checks if max_i is too close to the borders
+    # Resets is to the closest possible if so
+    f_size = 5
+
+    sx = sta.shape[0]
+    sy = sta.shape[1]
+
+    x_d1 = max_i[0]-f_size
+    x_d2 = max_i[0]+f_size
+    y_d1 = max_i[1]-f_size
+    y_d2 = max_i[1]+f_size
+
+    if x_d1 <= 0: max_i[0] = f_size+1
+    elif x_d2 > sx-1: max_i[0] = sx-f_size-1
+
+    if y_d1 <= 0: max_i[1] = f_size+1
+    elif y_d2 > sy-1: max_i[1] = sy-f_size-1
+    return max_i
+
+
 def stim_weighted(sta, max_i, stimulus):
     # Turns the checkerflicker stimulus into more Gaussian-like
     f_size = 5
+
     weights = sta[max_i[0]-f_size-1:max_i[0]+f_size,
                   max_i[1]-f_size-1:max_i[1]+f_size,
                   max_i[2]].reshape((2*f_size+1, 2*f_size+1))

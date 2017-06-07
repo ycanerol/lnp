@@ -40,7 +40,7 @@ def log_nlt_recovery(spikes, filtered_recovery, bin_nr, dt):
 
 def q_nlt_recovery(spikes, filtered_recovery, bin_nr, dt):
     quantiles = mquantiles(filtered_recovery,
-                           np.linspace(0, 1, bin_nr, endpoint=False))
+                           np.linspace(0, 1, bin_nr+1, endpoint=False)[1:])
     bindices = np.digitize(filtered_recovery, quantiles)
     # Returns which bin each should go
     spikecount_in_bins = np.array([])
