@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -10,12 +9,12 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_21/analyzed/'
+LR3 Gollisch/data/Experiments/Salamander/2014_01_27/analyzed/'
+
+exp_name = main_dir.split('/')[-4] + ' ' +main_dir.split('/')[-3]
 
 allfiles = os.listdir(main_dir)
-stim_type = 3
 
 files_f = []  # Full field flicker
 files_c = []  # Checkerflicker
@@ -29,33 +28,40 @@ for i in allfiles:
 onoffindices_f = np.array([])
 onoffindices_c = np.array([])
 
-#files_f = ['2_SP_C6602.npz']  # Full field flicker
-#files_c = []
+spikenr_f = np.array([])
+spikenr_c = np.array([])
+
+filenames_f = []
+filenames_c = []
 
 for i in files_f:
     f = np.load(main_dir+i)
     onoffindices_f = np.append(onoffindices_f, f['onoffindex'])
+    spikenr_f = np.append(spikenr_f, f['total_spikes'])
     filenames_f.append(f['filename'])
+    
 for i in files_c:
     f = np.load(main_dir+i)
     onoffindices_c = np.append(onoffindices_c, f['onoffindex'])
+    spikenr_c = np.append(spikenr_c, f['total_spikes'])
     filenames_c.append(f['filename'])
 
 # %%
-plt.figure(figsize=(10,6))
+plt.figure(figsize=(10, 6))
 plt.hist(onoffindices_f, bins=np.linspace(-1, 1, num=40), alpha=.6)
 plt.hist(onoffindices_c, bins=np.linspace(-1, 1, num=40), alpha=.6)
 plt.legend(['Full field', 'Checkerflicker'])
-plt.title('Histogram of On Off indices')
+plt.title('Histogram of On Off indices \n{}'.format(exp_name))
+plt.xlabel('On-off index')
+plt.ylabel('Frequency')
 plt.show()
 
-plt.figure(figsize=(8,8))
+plt.figure(figsize=(8, 8))
 plt.scatter(onoffindices_f, onoffindices_c)
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--')
-plt.title('On-Off indices obtained from Full field vs Checkerflicker')
+plt.title('On-Off indices obtained from Full field vs Checkerflicker\n{}'.format(exp_name))
 plt.ylabel('Checkerflicker')
 plt.xlabel('Full field flicker')
 plt.axis('square')
 plt.show()
-
 

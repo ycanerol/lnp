@@ -24,7 +24,7 @@ except:
     import lnp
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_21/'
+LR3 Gollisch/data/Experiments/Salamander/2014_01_27/'
 stimulus_type = 3
 # Change stimulus type:
 # full field flicker is 2
@@ -42,7 +42,8 @@ for line in f:
     if int(c) < 4:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
-#files = ['101', '102', '103']  # Use only one file for testing purposes
+files = ['4802']  # Use only one file for testing purposes
+
 first_run_flag = True
 
 for filename in files:
@@ -71,6 +72,10 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
 
     spike_counts = Counter(np.digitize(spike_times, ftimes))
     spikes = np.array([spike_counts[i] for i in range(total_frames)])
+    
+    total_spikes = np.sum(spikes)
+    if total_spikes < 2:
+        continue
 
 # %%
     sta_unscaled, max_i, temporal = lnpc.sta(spikes,
@@ -99,7 +104,7 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
                                        spike_counts_in_bins[0])
 
     v[:, 0], bins[1],\
-    spike_counts_in_bins[1],
+    spike_counts_in_bins[1],\
     peak, onoffindex = lnpc.onoffindex(v[:, 0], bins[1],
                                        spike_counts_in_bins[1])
 
@@ -180,5 +185,6 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
              filename=filename,
              bins=bins,
              spike_counts_in_bins=spike_counts_in_bins,
-             onoffindex=onoffindex
+             onoffindex=onoffindex,
+             total_spikes=total_spikes
              )

@@ -24,7 +24,7 @@ LR3 Gollisch/scripts/')
     import lnp_checkerflicker as lnpc
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_21/'
+LR3 Gollisch/data/Experiments/Salamander/2014_01_27/'
 stimulus_type = 2
 # Change stimulus type:
 # full field flicker is 2
@@ -48,7 +48,7 @@ for line in f:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
 
-#files=['101']
+files=['3401']
 
 first_run_flag = True
 
@@ -75,6 +75,11 @@ for filename in files:
 
     spike_counts = Counter(np.digitize(spike_times, ftimes))
     spikes = np.array([spike_counts[i] for i in range(total_frames)])
+
+    total_spikes = np.sum(spikes)
+    if total_spikes < 2:
+        continue
+
     # Bin spikes
 
     # Start the analysis
@@ -96,8 +101,8 @@ for filename in files:
                                                             eigen_indices,
                                                             bin_nr)
     sta, bins_sta, \
-    spikecount_sta,_ ,_ = lnpc.onoffindex(sta, bins_sta,
-                                       spikecount_sta)
+    spikecount_sta, _, _ = lnpc.onoffindex(sta, bins_sta,
+                                           spikecount_sta)
 
     v[:, 0], bins_stc,\
     spikecount_stc, peak, onoffindex = lnpc.onoffindex(v[:, 0], bins_stc,
@@ -140,7 +145,7 @@ for filename in files:
     plt.xlabel('Eigenvalue index')
     plt.ylabel('Variance')
 
-#    plt.show()
+    plt.show()
 
     plt.savefig(save_path, dpi=200, bbox_inches='tight')
     plt.close()
@@ -158,4 +163,5 @@ for filename in files:
              v=v,
              w=w,
              spike_path=spike_path,
+             total_spikes=total_spikes
              )
