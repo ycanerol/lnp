@@ -65,7 +65,7 @@ def stc(spikes, stimulus, filter_length, total_frames, dt,
             snpta = np.array(snippet)[np.newaxis, :]  # Non-centered STC
             covariance = covariance+np.dot(snpta.T, snpta)*spikes[i]
     covariance = covariance/(sum(spikes)-1)
-    eigenvalues, eigenvectors = np.linalg.eig(covariance)
+    eigenvalues, eigenvectors = np.linalg.eigh(covariance)
 
     sorted_eig = np.argsort(eigenvalues)[::-1]
     eigenvalues = eigenvalues[sorted_eig]

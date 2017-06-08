@@ -100,7 +100,7 @@ def stc(spikes, stimulus, filter_length, total_frames, dt,
             snippet = np.reshape(snippet, (1, 20))
             covariance = covariance+np.dot(snippet.T, snippet)*spikes[i]
     covariance = covariance/(np.sum(spikes)-1)
-    eigenvalues, eigenvectors = np.linalg.eig(covariance)
+    eigenvalues, eigenvectors = np.linalg.eigh(covariance)
 
     sorted_eig = np.argsort(eigenvalues)[::-1]
     eigenvalues = eigenvalues[sorted_eig]
