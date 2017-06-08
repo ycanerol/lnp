@@ -24,7 +24,7 @@ except:
     import lnp
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_27/'
+LR3 Gollisch/data/Experiments/Salamander/2014_01_21/'
 stimulus_type = 3
 # Change stimulus type:
 # full field flicker is 2
@@ -42,7 +42,7 @@ for line in f:
     if int(c) < 4:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
-files = ['4802']  # Use only one file for testing purposes
+#files = files[280:]  # Use only one file for testing purposes
 
 first_run_flag = True
 
@@ -72,7 +72,7 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
 
     spike_counts = Counter(np.digitize(spike_times, ftimes))
     spikes = np.array([spike_counts[i] for i in range(total_frames)])
-    
+
     total_spikes = np.sum(spikes)
     if total_spikes < 2:
         continue
@@ -83,12 +83,12 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
                                              filter_length,
                                              total_frames)
     max_i = lnpc.check_max_i(sta_unscaled, max_i)
-    
+
     stim_gaus = lnpc.stim_weighted(sta_unscaled, max_i, stimulus)
-   
+
     sta_weighted, _ = lnp.sta(spikes, stim_gaus, filter_length, total_frames)
 
-    w, v, _, _, _ = lnpc.stc(spikes, stim_gaus, 
+    w, v, _, _, _ = lnpc.stc(spikes, stim_gaus,
                              filter_length, total_frames, dt)
 
     bins = []
@@ -101,7 +101,7 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
     sta_weighted, bins[0], \
     spike_counts_in_bins[0], \
     _, _ = lnpc.onoffindex(sta_weighted, bins[0],
-                                       spike_counts_in_bins[0])
+                           spike_counts_in_bins[0])
 
     v[:, 0], bins[1],\
     spike_counts_in_bins[1],\
@@ -129,6 +129,8 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
     plt.plot(temporal)
     plt.axvline(peak, linewidth=1, color='r', linestyle='dashed')
     plt.title('Recovered filters')
+    plt.ylabel('Linear output')
+    plt.xlabel('Time')
     plt.xticks(np.linspace(0, filter_length, filter_length/2+1))
     plt.legend(['Weighted stimulus', 'Eigenvalue 0', 'Temporal component',
                 'Peak'])

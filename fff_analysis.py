@@ -7,7 +7,6 @@ Created on Mon May 22 12:51:21 2017
 
 Analysis of real data with full field flicker stimulus
 
-
 """
 import sys
 import h5py
@@ -24,7 +23,7 @@ LR3 Gollisch/scripts/')
     import lnp_checkerflicker as lnpc
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_27/'
+LR3 Gollisch/data/Experiments/Salamander/2014_01_21/'
 stimulus_type = 2
 # Change stimulus type:
 # full field flicker is 2
@@ -48,7 +47,7 @@ for line in f:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
 
-files=['3401']
+#files = ['3401']
 
 first_run_flag = True
 
@@ -145,7 +144,7 @@ for filename in files:
     plt.xlabel('Eigenvalue index')
     plt.ylabel('Variance')
 
-    plt.show()
+#    plt.show()
 
     plt.savefig(save_path, dpi=200, bbox_inches='tight')
     plt.close()
