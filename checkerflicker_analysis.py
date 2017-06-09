@@ -24,7 +24,7 @@ except:
     import lnp
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_21/'
+LR3 Gollisch/data/Experiments/Salamander/2014_01_27/'
 stimulus_type = 3
 # Change stimulus type:
 # full field flicker is 2
@@ -42,7 +42,9 @@ for line in f:
     if int(c) < 4:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
-#files = files[280:]  # Use only one file for testing purposes
+
+#files = files[200:]  # Use only one file for testing purposes
+#files=['101']
 
 first_run_flag = True
 
@@ -108,72 +110,7 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
     peak, onoffindex = lnpc.onoffindex(v[:, 0], bins[1],
                                        spike_counts_in_bins[1])
 
-# %%
-    if False:  # change if you need STA to be plotted
-        plt.figure(figsize=(15, 15), dpi=200)
-        plt.title('STA for cell {}'.format(filename))
-        for i in range(20):
-            plt.subplot(4, 5, i+1)
-            plt.imshow(sta_unscaled[:, :, i], cmap='Greys',
-                       vmin=np.min(sta_unscaled),
-                       vmax=np.max(sta_unscaled))
-        plt.show()
-
-    plt.figure(figsize=(15, 10), dpi=200)
-    plt.suptitle('Checkerflicker for {}'.format(
-            spike_path.split('Experiments')[1]))
-
-    plt.subplot(2, 2, 1)
-    plt.plot(sta_weighted)
-    plt.plot(v[:, 0])
-    plt.plot(temporal)
-    plt.axvline(peak, linewidth=1, color='r', linestyle='dashed')
-    plt.title('Recovered filters')
-    plt.ylabel('Linear output')
-    plt.xlabel('Time')
-    plt.xticks(np.linspace(0, filter_length, filter_length/2+1))
-    plt.legend(['Weighted stimulus', 'Eigenvalue 0', 'Temporal component',
-                'Peak'])
-
-    ax = plt.subplot(2, 2, 2)
-    for i in range(len(bins)):
-        plt.plot(bins[i], spike_counts_in_bins[i], '-')
-    plt.legend(['Weigted stimulus', 'Eigenvector 0'])
-    plt.text(.5, .99, 'On-Off Bias: {:2.2f}'.format(onoffindex),
-             horizontalalignment='center',
-             verticalalignment='top',
-             transform=ax.transAxes)
-    plt.title('Recovered non-linearities')
-    plt.xlabel('Linear output')
-    plt.ylabel('Variance')
-
-    plt.subplot(2, 4, 5)
-    plt.imshow(sta_unscaled[:, :, max_i[2]].reshape((sx, sy,)), cmap='Greys',
-               vmin=np.min(sta_unscaled),
-               vmax=np.max(sta_unscaled))
-    plt.title('Receptive field')
-    plt.subplot(2, 4, 6)
-    f_size = 5
-    plt.imshow(sta_unscaled[max_i[0]-f_size:max_i[0]+f_size+1,
-                            max_i[1]-f_size:max_i[1]+f_size+1,
-                            int(max_i[2])],
-               cmap='Greys',
-               vmin=np.min(sta_unscaled),
-               vmax=np.max(sta_unscaled))
-    plt.title('Brightest pixel: {}'.format(max_i))
-
-    plt.subplot(2, 2, 4)
-    plt.plot(w, 'o')
-    plt.title('Eigenvalues of covariance matrix')
-    plt.xticks(np.linspace(0, filter_length, filter_length/2+1))
-    plt.xlabel('Eigenvalue index')
-    plt.ylabel('Variance')
-
-#    plt.show()
-
-    plt.savefig(save_path, dpi=200, bbox_inches='tight')
-    plt.close()
-
+#%%
     np.savez(save_path,
              sta_unscaled=sta_unscaled,
              sta_weighted=sta_weighted,
@@ -188,5 +125,6 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
              bins=bins,
              spike_counts_in_bins=spike_counts_in_bins,
              onoffindex=onoffindex,
-             total_spikes=total_spikes
+             total_spikes=total_spikes,
+             peak=peak
              )

@@ -23,7 +23,7 @@ LR3 Gollisch/scripts/')
     import lnp_checkerflicker as lnpc
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_21/'
+LR3 Gollisch/data/Experiments/Salamander/2014_01_27/'
 stimulus_type = 2
 # Change stimulus type:
 # full field flicker is 2
@@ -47,7 +47,7 @@ for line in f:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
 
-#files = ['3401']
+#files = ['101']
 
 first_run_flag = True
 
@@ -107,48 +107,7 @@ for filename in files:
     spikecount_stc, peak, onoffindex = lnpc.onoffindex(v[:, 0], bins_stc,
                                                        spikecount_stc)
 
-    # %%
-    rows = 1
-    columns = 3
-    fig = plt.figure(figsize=(20, 5))
-    plt.suptitle('Full field flicker for {}'.format(
-                    spike_path.split('Experiments')[1]))
-
-    plt.subplot(rows, columns, 1)
-    plt.plot(sta, ':')
-    plt.plot(v[:, eigen_indices])
-    plt.title('Filters')
-    plt.axvline(peak, linewidth=1, color='r', linestyle='dashed')
-    plt.legend(['STA']+eigen_legends+['Peak'], fontsize='x-small')
-    plt.xticks(np.linspace(0, filter_length, filter_length/2+1))
-    plt.xlabel('Time')
-    plt.ylabel('Relative filter strength')
-
-    ax = plt.subplot(rows, columns, 2)
-    plt.plot(bins_sta, spikecount_sta, '-')
-    plt.plot(bins_stc, spikecount_stc, '-')
-    plt.text(.5, .99, 'On-Off Bias: {:2.2f}'.format(onoffindex),
-             horizontalalignment='center',
-             verticalalignment='top',
-             transform=ax.transAxes)
-    plt.title('Non-linearities')
-    plt.legend(['STA']+eigen_legends, fontsize='x-small')
-    plt.xlabel('Linear output')
-    plt.ylabel('Firing rate')
-
-    plt.subplot(rows, columns, 3)
-
-    plt.plot(w, 'o')
-    plt.title('Eigenvalues of covariance matrix')
-    plt.xticks(np.linspace(0, filter_length, filter_length/2+1))
-    plt.xlabel('Eigenvalue index')
-    plt.ylabel('Variance')
-
-#    plt.show()
-
-    plt.savefig(save_path, dpi=200, bbox_inches='tight')
-    plt.close()
-
+#%%
     np.savez(save_path,
              sta=sta,
              stimulus_type=stimulus_type,
@@ -162,5 +121,6 @@ for filename in files:
              v=v,
              w=w,
              spike_path=spike_path,
-             total_spikes=total_spikes
+             total_spikes=total_spikes,
+             peak=peak
              )
