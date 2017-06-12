@@ -4,13 +4,20 @@
 Created on Fri Jun  9 12:16:38 2017
 
 @author: ycan
+
+Plotting for data from Dimos
+
+The stimulus names are different than Fernando's data. 
+2 is checkerflicker
+3 is full field flicker
+
 """
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_02_25/analyzed/'
+LR3 Gollisch/data/Experiments/Mouse/2017_01_17/analyzed/'
 
 exp_name = main_dir.split('/')[-4]+' '+main_dir.split('/')[-3]
 
@@ -29,8 +36,9 @@ for i in allfiles:
 files = [i for i in files_c if i in files_f]
 
 for i in files:
-    fname_f = main_dir+'2_SP_C'+i+'.npz'
-    fname_c = main_dir+'3_SP_C'+i+'.npz'
+    # Changed this part because of stimulus order difference
+    fname_c = main_dir+'2_SP_C'+i+'.npz'
+    fname_f = main_dir+'3_SP_C'+i+'.npz'
 
     f = np.load(fname_f)
     c = np.load(fname_c)

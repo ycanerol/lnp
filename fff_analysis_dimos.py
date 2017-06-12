@@ -1,63 +1,56 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon May 22 12:51:21 2017
+Created on Mon Jun 12 16:21:33 2017
 
 @author: ycan
 
-Analysis of real data with full field flicker stimulus
+Full field flicker analysis for data from Dimos
 
 """
+
 import sys
-import h5py
 import numpy as np
 from collections import Counter
 import matplotlib.pyplot as plt
+import scipy.io
 try:
     import lnp
     import lnp_checkerflicker as lnpc
 except:
-    sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/scripts/')
+    sys.path.append('/Users/ycan/Documents/official/gottingen/lab rotations/LR3 Gollisch/scripts/')
     import lnp
     import lnp_checkerflicker as lnpc
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_27/'
-stimulus_type = 2
-# Change stimulus type:
-# full field flicker is 2
-# checkerflicker is 3
-cluster_save = main_dir+'clusterSave.txt'
+LR3 Gollisch/data/Experiments/Mouse/2017_01_17/'
 
-if stimulus_type == 2:
-    stimulus_path = '/Users/ycan/Documents/official/gottingen/\
+cells_classified = main_dir+'sorting_info.mat'
+#%%
+stimulus_path = '/Users/ycan/Documents/official/gottingen/\
 lab rotations/LR3 Gollisch/data/fff2h.npy'
-    frames_path = 'frametimes/2_fff2blinks_frametimings.mat'
-elif stimulus_type == 3:
-    stimulus_path = '/Users/ycan/Documents/official/gottingen/\
-lab rotations/LR3 Gollisch/data/checkerflickerstimulus.npy'
-    frames_path = 'frametimes/3_checkerflicker10x10bw2blinks_frametimings.mat'
+frames_path = 'frametimes/3_fff_gauss_2blinks_frametimings.mat'
+stimulus_type = frames_path.split('/')[-1].split('_')[0]
+stimulus_name = frames_path.split('/')[-1]
 
-f = open(cluster_save, 'r')
+f = scipy.io.loadmat(cells_classified)
+a = f['clusters'].T[0]
+b = f['clusters'].T[1]
 files = []
-for line in f:
-    a, b, c = line.split(' ')
-    if int(c) < 4:
-        files.append('{}{:02.0f}'.format(a, int(b)))
-f.close()
+for i in range(len(a)):
+    files.append('{}{:02.0f}'.format(int(a[i]), int(b[i])))
 
 #files = ['502']
-
+# %%
 first_run_flag = True
 
 for filename in files:
     if first_run_flag:
-        f = h5py.File(main_dir+frames_path, 'r')
-        ftimes = (np.array(f.get('ftimes'))/1000)[:, 0]
+        f = scipy.io.loadmat(main_dir+frames_path)
+        ftimes = (np.array(f.get('ftimes')/1000))
+        ftimes = ftimes.reshape((ftimes.size,))
         dt = np.average(np.ediff1d(ftimes))
         # Average difference between two frames in miliseconds
-        f.close()
 
         total_frames = ftimes.shape[0]
         filter_length = 20  # Specified in nr of frames
@@ -122,5 +115,7 @@ for filename in files:
              w=w,
              spike_path=spike_path,
              total_spikes=total_spikes,
-             peak=peak
+             peak=peak,
+             stimulus_name=stimulus_name
              )
+
