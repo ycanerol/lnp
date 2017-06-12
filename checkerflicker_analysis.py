@@ -24,7 +24,7 @@ except:
     import lnp
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_27/'
+LR3 Gollisch/data/Experiments/Salamander/2014_02_25/'
 stimulus_type = 3
 # Change stimulus type:
 # full field flicker is 2
@@ -43,7 +43,6 @@ for line in f:
         files.append('{}{:02.0f}'.format(a, int(b)))
 f.close()
 
-#files = files[200:]  # Use only one file for testing purposes
 #files=['101']
 
 first_run_flag = True

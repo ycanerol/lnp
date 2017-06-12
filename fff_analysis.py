@@ -23,7 +23,7 @@ LR3 Gollisch/scripts/')
     import lnp_checkerflicker as lnpc
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_27/'
+LR3 Gollisch/data/Experiments/Salamander/2014_02_25/'
 stimulus_type = 2
 # Change stimulus type:
 # full field flicker is 2
