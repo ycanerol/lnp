@@ -68,13 +68,13 @@ def stim_weighted(sta, max_i, stimulus):
                   max_i[2]].reshape((2*f_size+1, 2*f_size+1))
     if weights.max() < np.max(np.abs(weights)):
         weights = -weights
+    weights = weights/np.sqrt(np.sum(weights**2))
     stim_small = stimulus[max_i[0]-f_size-1:max_i[0]+f_size,
                           max_i[1]-f_size-1:max_i[1]+f_size, :]
     stim_weighted = np.array([])
     for i in range(stim_small.shape[2]):
         stim_weighted = np.append(stim_weighted, np.sum(stim_small[:, :, i] *
                                                         weights))
-    stim_weighted = stim_weighted/np.sqrt(np.sum(stim_weighted**2))
     return stim_weighted
 
 
