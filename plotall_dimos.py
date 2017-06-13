@@ -56,7 +56,7 @@ for i in files:
     plt.title('Filters')
     plt.axvline(f['peak'], linewidth=1, color='r', linestyle='dashed')
     plt.legend(['STA', 'Eigenvalue 0', 'Peak'], fontsize='small')
-    plt.xticks(np.linspace(0, 20, 20/2+1))
+    plt.xticks(np.linspace(0, 20, int(20/2+1)))
     plt.ylabel('Full field flicker\n$\\regular_{Linear\,\,\,output}$',
                fontsize=16)
     plt.xlabel('Time')
@@ -76,7 +76,7 @@ for i in files:
     plt.subplot(3, 3, 3)
     plt.plot(f['w'], 'o')
     plt.title('Eigenvalues of covariance matrix')
-    plt.xticks(np.linspace(0, 20, 20/2+1))
+    plt.xticks(np.linspace(0, 20, int(20/2+1)))
     plt.xlabel('Eigenvalue index')
     plt.ylabel('Variance')
 
@@ -88,7 +88,7 @@ for i in files:
     plt.title('Filters')
     plt.ylabel('Checkerflicker\n$\\regular_{Linear\,\,\,output}$', fontsize=16)
     plt.xlabel('Time')
-    plt.xticks(np.linspace(0, 20, 20/2+1))
+    plt.xticks(np.linspace(0, 20, int(20/2+1)))
     plt.legend(['Weighted stimulus', 'Eigenvalue 0', 'Brightest pixel',
                 'Peak'], fontsize='small')
 
@@ -107,7 +107,7 @@ for i in files:
     plt.subplot(3, 3, 6)
     plt.plot(c['w'], 'o')
     plt.title('Eigenvalues of covariance matrix')
-    plt.xticks(np.linspace(0, 20, 20/2+1))
+    plt.xticks(np.linspace(0, 20, int(20/2+1)))
     plt.xlabel('Eigenvalue index')
     plt.ylabel('Variance')
 

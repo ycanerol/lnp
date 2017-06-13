@@ -40,8 +40,6 @@ files = []
 for i in range(len(a)):
     files.append('{}{:02.0f}'.format(int(a[i]), int(b[i])))
 
-#files=['101']
-
 first_run_flag = True
 
 for filename in files:
