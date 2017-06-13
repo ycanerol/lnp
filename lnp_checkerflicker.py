@@ -70,11 +70,12 @@ def stim_weighted(sta, max_i, stimulus):
         weights = -weights
     stim_small = stimulus[max_i[0]-f_size-1:max_i[0]+f_size,
                           max_i[1]-f_size-1:max_i[1]+f_size, :]
-    stim_weighed = np.array([])
+    stim_weighted = np.array([])
     for i in range(stim_small.shape[2]):
-        stim_weighed = np.append(stim_weighed, np.sum(stim_small[:, :, i] *
-                                                      weights))
-    return stim_weighed
+        stim_weighted = np.append(stim_weighted, np.sum(stim_small[:, :, i] *
+                                                        weights))
+    stim_weighted = stim_weighted/np.sqrt(np.sum(stim_weighted**2))
+    return stim_weighted
 
 
 def nlt_recovery(spikes, stimulus, sta, bin_nr, dt):
