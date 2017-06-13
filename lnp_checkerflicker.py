@@ -12,6 +12,7 @@ Functions for STA and STC analysis for checkerflicker stimulus
 import numpy as np
 from scipy.stats.mstats import mquantiles
 import scipy.ndimage as ndi
+import peakutils
 
 
 def sta(spikes, stimulus, filter_length, total_frames):
@@ -115,9 +116,21 @@ def stc(spikes, stimulus, filter_length, total_frames, dt,
     return eigenvalues, eigenvectors, bins_stc, spikecount_stc, eigen_legends
 
 
+def getpeak(temporal_filter):
+    threshold = .7
+    peaks = peakutils.indexes(temporal_filter, thres=threshold)
+    peaks = np.append(peaks, peakutils.indexes(-temporal_filter,
+                                               thres=threshold))
+    sorted_peaks = np.argsort(np.abs(temporal_filter[peaks]))[::-1]
+    peaks = peaks[sorted_peaks][:2]  # Get two largest peaks
+    peak = peaks.min()  # Get the earliest peak
+    return peak
+
+
 def onoffindex(temporal_filter, bins, spikecount_in_bins):
     # Get peaks of STA/STC
-    peak = np.argmax(np.abs(temporal_filter[:7]))
+#    peak = np.argmax(np.abs(temporal_filter[:7]))
+    peak = getpeak(temporal_filter)
     # Flip if positive
     if temporal_filter[peak] < 0:
         temporal_filter = -temporal_filter
