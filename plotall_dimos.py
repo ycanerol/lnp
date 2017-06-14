@@ -7,7 +7,7 @@ Created on Fri Jun  9 12:16:38 2017
 
 Plotting for data from Dimos
 
-The stimulus names are different than Fernando's data. 
+The stimulus names are different than Fernando's data (Salamander).
 2 is checkerflicker
 3 is full field flicker
 
@@ -120,7 +120,8 @@ for i in files:
 
     plt.subplot(3, 3, 8)
     f_size = 5
-    plt.imshow(c['sta_unscaled'][c['max_i'][0]-f_size:c['max_i'][0]+f_size+1,
+    plt.imshow(c['sta_unscaled'][c['max_i'][0]-f_size:c['max_i
+    '][0]+f_size+1,
                                  c['max_i'][1]-f_size:c['max_i'][1]+f_size+1,
                                  int(c['max_i'][2])],
                cmap='Greys',

@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/data/Experiments/Salamander/2014_01_21/analyzed/'
 
-exp_name = main_dir.split('/')[-4]+' '+main_dir.split('/')[-3]
+exp_name = main_dir.split('/')[-4]+'_'+main_dir.split('/')[-3]
 
 allfiles = os.listdir(main_dir)
 
@@ -82,27 +82,34 @@ spikenr_c = spikenrc_c
 onoffindices_c = onoffindicesc_c
 
 # %%
-plt.hist(spikenr_f, np.linspace(0, spikenr_f.max(), num=250))
-plt.title('Spike numbers for FFF')
-plt.show()
-plt.hist(spikenr_c, np.linspace(0, spikenr_c.max(), num=250))
-plt.title('Spike numbers for Checkerflicker')
-plt.show()
-# %%
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 16), dpi=200)
+
+plt.subplot(2, 1, 2)
 plt.hist(onoffindices_f, bins=np.linspace(-1, 1, num=40), alpha=.6)
 plt.hist(onoffindices_c, bins=np.linspace(-1, 1, num=40), alpha=.6)
 plt.legend(['Full field', 'Checkerflicker'])
 plt.title('Histogram of On Off indices \n{}'.format(exp_name))
 plt.xlabel('On-off index')
 plt.ylabel('Frequency')
-plt.show()
 
-plt.figure(figsize=(8, 8))
+plt.subplot(2, 1, 1)
 plt.scatter(onoffindices_f, onoffindices_c)
+plt.plot(onoffindices_f[outliers], onoffindices_c[outliers], 'r.')
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--')
-plt.title('On-Off indices obtained from Full field vs Checkerflicker\n{}'.format(exp_name))
+for i in outliers:
+    plt.text(onoffindices_f[i], onoffindices_c[i], filenamesc_c[i])
+plt.title('On-Off indices obtained from Full field vs Checkerflicker\n{}'
+          .format(exp_name))
 plt.ylabel('Checkerflicker')
 plt.xlabel('Full field flicker')
 plt.axis('square')
+
+plt.tight_layout()
+plt.savefig('/Users/ycan/Documents/official/gottingen/lab rotations/\
+LR3 Gollisch/figures/{}'.format(exp_name)
+            , dpi=200)
 plt.show()
+
+for i in outliers:
+    print('{:5s} change {:>5.2f} to {:>5.2f}'
+          .format(filenamesc_c[i], onoffindices_f[i], onoffindices_c[i]))
