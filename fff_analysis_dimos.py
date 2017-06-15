@@ -23,9 +23,9 @@ except:
     import lnp_checkerflicker as lnpc
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Mouse/2017_01_17/'
+LR3 Gollisch/data/Experiments/Mouse/2016_10_21/'
 
-cells_classified = main_dir+'sorting_info.mat'
+cells_classified = main_dir+'clusters.mat'
 #%%
 stimulus_path = '/Users/ycan/Documents/official/gottingen/\
 lab rotations/LR3 Gollisch/data/fff2h.npy'

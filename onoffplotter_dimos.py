@@ -10,10 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Mouse/2017_01_17/analyzed/'
+LR3 Gollisch/data/Experiments/Mouse/2016_10_21/analyzed/'
 
-#main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-#LR3 Gollisch/data/Experiments/Salamander/2014_02_20/analyzed/'
 
 exp_name = main_dir.split('/')[-4]+'_'+main_dir.split('/')[-3]
 
@@ -111,8 +109,7 @@ plt.axis('square')
 
 plt.tight_layout()
 plt.savefig('/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/figures/Mouse_2017_01_17.png'
-            , dpi=200)
+LR3 Gollisch/figures/{}'.format(exp_name), dpi=200)
 plt.show()
 
 for i in outliers:

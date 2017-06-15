@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Salamander/2014_01_21/analyzed/'
+LR3 Gollisch/data/Experiments/Salamander/2014_02_25/analyzed/'
 
 exp_name = main_dir.split('/')[-4]+'_'+main_dir.split('/')[-3]
 
@@ -81,6 +81,8 @@ onoffindices_f = onoffindicesc_f
 spikenr_c = spikenrc_c
 onoffindices_c = onoffindicesc_c
 
+outliers = np.where(np.abs(onoffindices_c - onoffindices_f) > .6)[0]
+
 # %%
 plt.figure(figsize=(8, 16), dpi=200)
 
@@ -106,8 +108,7 @@ plt.axis('square')
 
 plt.tight_layout()
 plt.savefig('/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/figures/{}'.format(exp_name)
-            , dpi=200)
+LR3 Gollisch/figures/{}'.format(exp_name), dpi=200)
 plt.show()
 
 for i in outliers:

@@ -22,9 +22,9 @@ except:
     import lnp
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Mouse/2017_01_17/'
+LR3 Gollisch/data/Experiments/Mouse/2016_10_21/'
 
-cells_classified = main_dir+'sorting_info.mat'
+cells_classified = main_dir+'clusters.mat'
 
 frames_path = 'frametimes/2_checkerflicker10x10bw2blinks_frametimings.mat'
 stimulus_type = frames_path.split('/')[-1].split('_')[0]

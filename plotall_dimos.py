@@ -17,7 +17,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Mouse/2017_01_17/analyzed/'
+LR3 Gollisch/data/Experiments/Mouse/2017_02_14/analyzed/'
 
 exp_name = main_dir.split('/')[-4]+' '+main_dir.split('/')[-3]
 
@@ -120,8 +120,7 @@ for i in files:
 
     plt.subplot(3, 3, 8)
     f_size = 5
-    plt.imshow(c['sta_unscaled'][c['max_i'][0]-f_size:c['max_i
-    '][0]+f_size+1,
+    plt.imshow(c['sta_unscaled'][c['max_i'][0]-f_size:c['max_i'][0]+f_size+1,
                                  c['max_i'][1]-f_size:c['max_i'][1]+f_size+1,
                                  int(c['max_i'][2])],
                cmap='Greys',
