@@ -12,7 +12,6 @@ Full field flicker analysis for data from Dimos
 import sys
 import numpy as np
 from collections import Counter
-import matplotlib.pyplot as plt
 import scipy.io
 try:
     import lnp
@@ -23,10 +22,10 @@ except:
     import lnp_checkerflicker as lnpc
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Mouse/2016_10_21/'
+LR3 Gollisch/data/Experiments/Mouse/2017_02_14/'
 
 cells_classified = main_dir+'clusters.mat'
-#%%
+
 stimulus_path = '/Users/ycan/Documents/official/gottingen/\
 lab rotations/LR3 Gollisch/data/fff2h.npy'
 frames_path = 'frametimes/3_fff_gauss_2blinks_frametimings.mat'
@@ -44,7 +43,10 @@ for i in range(len(a)):
 # %%
 first_run_flag = True
 
-for filename in files:
+ooi_dimos = scipy.io.loadmat(main_dir+'/on_bias.mat')['onbias']
+ooi_dimos = ooi_dimos.reshape((ooi_dimos.shape[1],))
+
+for i, filename in enumerate(files):
     if first_run_flag:
         f = scipy.io.loadmat(main_dir+frames_path)
         ftimes = (np.array(f.get('ftimes')/1000))
@@ -100,7 +102,7 @@ for filename in files:
     spikecount_stc, peak, onoffindex = lnpc.onoffindex(v[:, 0], bins_stc,
                                                        spikecount_stc)
 
-#%%
+
     np.savez(save_path,
              sta=sta,
              stimulus_type=stimulus_type,
@@ -116,6 +118,6 @@ for filename in files:
              spike_path=spike_path,
              total_spikes=total_spikes,
              peak=peak,
-             stimulus_name=stimulus_name
+             stimulus_name=stimulus_name,
+             ooi_dimos=ooi_dimos[i]
              )
-

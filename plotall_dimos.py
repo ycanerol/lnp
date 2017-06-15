@@ -17,9 +17,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Mouse/2017_02_14/analyzed/'
+LR3 Gollisch/data/Experiments/Mouse/2017_01_31/analyzed/'
 
-exp_name = main_dir.split('/')[-4]+' '+main_dir.split('/')[-3]
+exp_name = main_dir.split('/')[-4]+'_'+main_dir.split('/')[-3]
 
 allfiles = os.listdir(main_dir)
 

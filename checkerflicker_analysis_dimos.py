@@ -10,7 +10,6 @@ Analyze checkerflicker stimulus from Dimos
 import sys
 import numpy as np
 from collections import Counter
-import matplotlib.pyplot as plt
 import scipy.io
 # Custom packages
 try:
@@ -22,7 +21,7 @@ except:
     import lnp
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/data/Experiments/Mouse/2016_10_21/'
+LR3 Gollisch/data/Experiments/Mouse/2017_01_31/'
 
 cells_classified = main_dir+'clusters.mat'
 
@@ -104,7 +103,6 @@ rotations/LR3 Gollisch/data/checkerflickerstimulus.npy')[:, :, :total_frames]
     peak, onoffindex = lnpc.onoffindex(v[:, 0], bins[1],
                                        spike_counts_in_bins[1])
 
-#%%
     np.savez(save_path,
              sta_unscaled=sta_unscaled,
              sta_weighted=sta_weighted,
