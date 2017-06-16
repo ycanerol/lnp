@@ -14,8 +14,12 @@ LR3 Gollisch/data/Experiments/Mouse/'
 
 all_experiments = os.listdir(main_dir)[1:]
 
-for experiment in all_experiments:
+all_o = np.array([])
+all_f = np.array([])
+all_c = np.array([])
 
+for experiment in all_experiments:
+#%%
     w_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/data/Experiments/Mouse/'+experiment+'/analyzed/'
 
@@ -32,9 +36,10 @@ LR3 Gollisch/data/Experiments/Mouse/'+experiment+'/analyzed/'
                 files_f.append(i)
             elif i[0] == str(2):
                 files_c.append(i)
+    onoffindices_o = np.array([])
     onoffindices_f = np.array([])
     onoffindices_c = np.array([])
-    onoffindices_o = np.array([])
+
 
     spikenr_f = np.array([])
     spikenr_c = np.array([])
@@ -90,12 +95,14 @@ LR3 Gollisch/data/Experiments/Mouse/'+experiment+'/analyzed/'
             onoffindicesc_c = np.append(onoffindicesc_c, onoffindices_c[i])
 
     spikenr_f = spikenrc_f
+    spikenr_c = spikenrc_c
     onoffindices_f = onoffindicesc_f
     onoffindices_o = onoffindicesc_o
-    spikenr_c = spikenrc_c
     onoffindices_c = onoffindicesc_c
 
-    outliers = np.where(np.abs(onoffindices_c - onoffindices_f) > .6)[0]
+    outliers_cf = np.where(np.abs(onoffindices_c - onoffindices_f) > .6)[0]
+    outliers_of = np.where(np.abs(onoffindices_o - onoffindices_f) > .6)[0]
+    outliers_co = np.where(np.abs(onoffindices_c - onoffindices_o) > .6)[0]
 
     r_cf = np.corrcoef(onoffindices_c, onoffindices_f)[1, 0]
     r_of = np.corrcoef(onoffindices_o, onoffindices_f)[1, 0]
@@ -118,35 +125,101 @@ LR3 Gollisch/data/Experiments/Mouse/'+experiment+'/analyzed/'
 
     plt.subplot(2, 2, 2)
     plt.scatter(onoffindices_f, onoffindices_c)
-    plt.plot(onoffindices_f[outliers], onoffindices_c[outliers], 'r.')
+    plt.plot(onoffindices_f[outliers_cf], onoffindices_c[outliers_cf], 'r.')
     plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
     plt.text(.7, -1.05, 'R = {:4.2}'.format(r_cf))
     plt.axis(axis_limits)
-    for i in outliers:
+    for i in outliers_cf:
         plt.text(onoffindices_f[i], onoffindices_c[i], filenamesc_c[i])
     plt.title('On-Off indices obtained from Full field vs Checkerflicker')
     plt.ylabel('Checkerflicker')
     plt.xlabel('Full field flicker')
-   
+
     plt.subplot(2, 2, 3)
     plt.scatter(onoffindices_f, onoffindices_o)
+    plt.plot(onoffindices_f[outliers_of], onoffindices_o[outliers_of], 'r.')
     plt.text(.7, -1.05, 'R = {:4.2}'.format(r_of))
-    plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha = .4)
+    plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
     plt.axis(axis_limits)
-    plt.title('fff vs on off steps')
-    plt.xlabel('full field flicker')
-    plt.ylabel('on off steps')
+    for i in outliers_of:
+        plt.text(onoffindices_f[i], onoffindices_o[i], filenamesc_f[i])
+    plt.title('FFF vs On off steps')
+    plt.xlabel('Full field flicker')
+    plt.ylabel('On off steps')
 
     plt.subplot(2, 2, 4)
     plt.scatter(onoffindices_c, onoffindices_o)
+    plt.plot(onoffindices_c[outliers_co], onoffindices_o[outliers_co], 'r.')
     plt.text(.7, -1.05, 'R = {:4.2}'.format(r_co))
-    plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha = .4)
+    plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
     plt.axis(axis_limits)
-    plt.title('checkerflicker vs on off steps')
-    plt.xlabel('checkerflicker')
-    plt.ylabel('on off steps')
+    for i in outliers_co:
+        plt.text(onoffindices_c[i], onoffindices_o[i], filenamesc_f[i])
+    plt.title('Checkerflicker vs On off steps')
+    plt.xlabel('Checkerflicker')
+    plt.ylabel('On off steps')
 
     plt.tight_layout()
     plt.subplots_adjust(top=0.90)
     plt.savefig('/Users/ycan/Documents/official/gottingen/lab rotations/\
+LR3 Gollisch/figures/{}'.format(exp_name), dpi=200)
+
+    all_o = np.append(all_o, onoffindices_o)
+    all_f = np.append(all_f, onoffindices_f)
+    all_c = np.append(all_c, onoffindices_c)
+    
+np.savez('/Users/ycan/Documents/official/gottingen/lab rotations/\
+LR3 Gollisch/data/Experiments/Mouse/2017_02_14/allindices.npz',
+         all_o=all_o,
+         all_f=all_f,
+         all_c=all_c)
+
+# %%
+exp_name = 'All experiments'
+
+r_cf = np.corrcoef(all_c, all_f)[1, 0]
+r_of = np.corrcoef(all_o, all_f)[1, 0]
+r_co = np.corrcoef(all_c, all_o)[1, 0]
+
+plt.figure(figsize=(10, 10), dpi=200)
+plt.suptitle(exp_name)
+
+plt.subplot(2, 2, 1)
+plt.hist(all_f, bins=np.linspace(-1, 1, num=40), alpha=.5)
+plt.hist(all_c, bins=np.linspace(-1, 1, num=40), alpha=.5)
+plt.hist(all_o, bins=np.linspace(-1, 1, num=40), alpha=.5)
+plt.legend(['Full field', 'Checkerflicker', 'On off steps'])
+plt.title('Histogram of On Off indices')
+plt.xlabel('On-off index')
+plt.ylabel('Frequency')
+
+plt.subplot(2, 2, 2)
+plt.scatter(all_f, all_c)
+plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
+plt.text(.7, -1.05, 'R = {:4.2}'.format(r_cf))
+plt.axis(axis_limits)
+plt.title('On-Off indices obtained from Full field vs Checkerflicker')
+plt.ylabel('Checkerflicker')
+plt.xlabel('Full field flicker')
+
+plt.subplot(2, 2, 3)
+plt.scatter(all_f, all_o)
+plt.text(.7, -1.05, 'R = {:4.2}'.format(r_of))
+plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
+plt.axis(axis_limits)
+plt.title('FFF vs On off steps')
+plt.xlabel('Full field flicker')
+plt.ylabel('On off steps')
+
+plt.subplot(2, 2, 4)
+plt.scatter(all_c, all_o)
+plt.text(.7, -1.05, 'R = {:4.2}'.format(r_co))
+plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
+plt.axis(axis_limits)
+plt.title('Checkerflicker vs On off steps')
+plt.xlabel('Checkerflicker')
+plt.ylabel('On off steps')
+plt.tight_layout()
+plt.subplots_adjust(top=0.90)
+plt.savefig('/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/figures/{}'.format(exp_name), dpi=200)
