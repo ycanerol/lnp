@@ -8,6 +8,7 @@ Created on Tue Jun  6 15:27:42 2017
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 
 main_dir = '/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/data/Experiments/Mouse/'
@@ -109,52 +110,81 @@ LR3 Gollisch/data/Experiments/Mouse/'+experiment+'/analyzed/'
     r_co = np.corrcoef(onoffindices_c, onoffindices_o)[1, 0]
 
     axis_limits = [-1.1, 1.1, -1.1, 1.1]
+    ticks = [-1 ,-.5,0,.5,1]
+
+    matplotlib.rcParams['axes.spines.right'] = False
+    matplotlib.rcParams['axes.spines.top'] = False
 
     # %%
     plt.figure(figsize=(10, 10), dpi=200)
     plt.suptitle(exp_name)
 
-    plt.subplot(2, 2, 1)
-    plt.hist(onoffindices_f, bins=np.linspace(-1, 1, num=40), alpha=.5)
-    plt.hist(onoffindices_c, bins=np.linspace(-1, 1, num=40), alpha=.5)
-    plt.hist(onoffindices_o, bins=np.linspace(-1, 1, num=40), alpha=.5)
-    plt.legend(['Full field', 'Checkerflicker', 'On off steps'])
-    plt.title('Histogram of On Off indices')
+    plt.subplot(6, 2, 1)
+    plt.hist(onoffindices_f, bins=np.linspace(-1, 1, num=40),
+             alpha=.5, color='C0')
+    plt.xticks(ticks)
+    plt.ylabel('FFF')
+    plt.subplot(6, 2, 3)
+    plt.ylabel('Checker')
+    plt.hist(onoffindices_c, bins=np.linspace(-1, 1, num=40),
+             alpha=.5, color='C1')
+    plt.xticks(ticks)
+    plt.subplot(6, 2, 5)
+    plt.ylabel('On off steps')
+    plt.hist(onoffindices_o, bins=np.linspace(-1, 1, num=40),
+             alpha=.5, color='C2')
+    plt.xticks(ticks)
     plt.xlabel('On-off index')
-    plt.ylabel('Frequency')
+    plt.subplots_adjust(hspace=0)
 
     plt.subplot(2, 2, 2)
-    plt.scatter(onoffindices_f, onoffindices_c)
-    plt.plot(onoffindices_f[outliers_cf], onoffindices_c[outliers_cf], 'r.')
+    plt.plot(onoffindices_f, onoffindices_c, '.')
+    plt.plot(onoffindices_f[outliers_cf], onoffindices_c[outliers_cf],
+             'r.', markersize=3)
     plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
+    plt.xticks(ticks)
+    plt.yticks(ticks)
     plt.text(.7, -1.05, 'R = {:4.2}'.format(r_cf))
     plt.axis(axis_limits)
+    plt.axis('square')
     for i in outliers_cf:
-        plt.text(onoffindices_f[i], onoffindices_c[i], filenamesc_c[i])
+        plt.text(onoffindices_f[i], onoffindices_c[i],
+                 filenamesc_c[i], fontsize=8)
     plt.title('On-Off indices obtained from Full field vs Checkerflicker')
     plt.ylabel('Checkerflicker')
     plt.xlabel('Full field flicker')
 
     plt.subplot(2, 2, 3)
-    plt.scatter(onoffindices_f, onoffindices_o)
-    plt.plot(onoffindices_f[outliers_of], onoffindices_o[outliers_of], 'r.')
+    plt.plot(onoffindices_f, onoffindices_o, '.')
+    plt.plot(onoffindices_f[outliers_of], onoffindices_o[outliers_of],
+             'r.', markersize=3)
+    plt.xticks(ticks)
+    plt.yticks(ticks)
     plt.text(.7, -1.05, 'R = {:4.2}'.format(r_of))
     plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
     plt.axis(axis_limits)
+    plt.axis('square')
     for i in outliers_of:
-        plt.text(onoffindices_f[i], onoffindices_o[i], filenamesc_f[i])
+        plt.text(onoffindices_f[i], onoffindices_o[i],
+                 filenamesc_f[i], fontsize=8)
     plt.title('FFF vs On off steps')
     plt.xlabel('Full field flicker')
     plt.ylabel('On off steps')
 
     plt.subplot(2, 2, 4)
-    plt.scatter(onoffindices_c, onoffindices_o)
-    plt.plot(onoffindices_c[outliers_co], onoffindices_o[outliers_co], 'r.')
+    plt.plot(onoffindices_c, onoffindices_o, '.')
+    plt.plot(onoffindices_c[outliers_co], onoffindices_o[outliers_co],
+             'r.', markersize=3)
+    plt.xticks(ticks)
+    plt.yticks(ticks)
     plt.text(.7, -1.05, 'R = {:4.2}'.format(r_co))
     plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
+#    plt.xticks?
     plt.axis(axis_limits)
+    plt.axis('square')
     for i in outliers_co:
-        plt.text(onoffindices_c[i], onoffindices_o[i], filenamesc_f[i])
+        plt.text(onoffindices_c[i], onoffindices_o[i],
+                 filenamesc_f[i], fontsize=8)
     plt.title('Checkerflicker vs On off steps')
     plt.xlabel('Checkerflicker')
     plt.ylabel('On off steps')
@@ -167,7 +197,7 @@ LR3 Gollisch/figures/{}'.format(exp_name), dpi=200)
     all_o = np.append(all_o, onoffindices_o)
     all_f = np.append(all_f, onoffindices_f)
     all_c = np.append(all_c, onoffindices_c)
-    
+
 np.savez('/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/data/Experiments/Mouse/2017_02_14/allindices.npz',
          all_o=all_o,
@@ -184,42 +214,59 @@ r_co = np.corrcoef(all_c, all_o)[1, 0]
 plt.figure(figsize=(10, 10), dpi=200)
 plt.suptitle(exp_name)
 
-plt.subplot(2, 2, 1)
-plt.hist(all_f, bins=np.linspace(-1, 1, num=40), alpha=.5)
-plt.hist(all_c, bins=np.linspace(-1, 1, num=40), alpha=.5)
-plt.hist(all_o, bins=np.linspace(-1, 1, num=40), alpha=.5)
-plt.legend(['Full field', 'Checkerflicker', 'On off steps'])
-plt.title('Histogram of On Off indices')
+plt.subplot(6, 2, 1)
+plt.hist(all_f, bins=np.linspace(-1, 1, num=40),
+         alpha=.5, color='C0')
+plt.xticks(ticks)
+plt.ylabel('FFF')
+plt.subplot(6, 2, 3)
+plt.ylabel('Checker')
+plt.hist(all_c, bins=np.linspace(-1, 1, num=40),
+         alpha=.5, color='C1')
+plt.xticks(ticks)
+plt.subplot(6, 2, 5)
+plt.ylabel('On off steps')
+plt.hist(all_o, bins=np.linspace(-1, 1, num=40),
+         alpha=.5, color='C2')
+plt.xticks(ticks)
 plt.xlabel('On-off index')
-plt.ylabel('Frequency')
 
 plt.subplot(2, 2, 2)
-plt.scatter(all_f, all_c)
+plt.plot(all_f, all_c, '.', alpha=.5)
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
 plt.text(.7, -1.05, 'R = {:4.2}'.format(r_cf))
 plt.axis(axis_limits)
+plt.axis('square')
+plt.xticks(ticks)
+plt.yticks(ticks)
 plt.title('On-Off indices obtained from Full field vs Checkerflicker')
 plt.ylabel('Checkerflicker')
 plt.xlabel('Full field flicker')
 
 plt.subplot(2, 2, 3)
-plt.scatter(all_f, all_o)
+plt.plot(all_f, all_o, '.', alpha=.5)
 plt.text(.7, -1.05, 'R = {:4.2}'.format(r_of))
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
 plt.axis(axis_limits)
+plt.axis('square')
+plt.xticks(ticks)
+plt.yticks(ticks)
 plt.title('FFF vs On off steps')
 plt.xlabel('Full field flicker')
 plt.ylabel('On off steps')
 
 plt.subplot(2, 2, 4)
-plt.scatter(all_c, all_o)
+plt.plot(all_c, all_o , '.', alpha=.5)
 plt.text(.7, -1.05, 'R = {:4.2}'.format(r_co))
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
 plt.axis(axis_limits)
+plt.axis('square')
+plt.xticks(ticks)
+plt.yticks(ticks)
 plt.title('Checkerflicker vs On off steps')
 plt.xlabel('Checkerflicker')
 plt.ylabel('On off steps')
 plt.tight_layout()
-plt.subplots_adjust(top=0.90)
+plt.subplots_adjust(top=0.9)
 plt.savefig('/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/figures/{}'.format(exp_name), dpi=200)
