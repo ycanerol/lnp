@@ -41,7 +41,6 @@ LR3 Gollisch/data/Experiments/Mouse/'+experiment+'/analyzed/'
     onoffindices_f = np.array([])
     onoffindices_c = np.array([])
 
-
     spikenr_f = np.array([])
     spikenr_c = np.array([])
 
@@ -110,7 +109,7 @@ LR3 Gollisch/data/Experiments/Mouse/'+experiment+'/analyzed/'
     r_co = np.corrcoef(onoffindices_c, onoffindices_o)[1, 0]
 
     axis_limits = [-1.1, 1.1, -1.1, 1.1]
-    ticks = [-1 ,-.5,0,.5,1]
+    ticks = [-1, -.5, 0, .5, 1]
 
     matplotlib.rcParams['axes.spines.right'] = False
     matplotlib.rcParams['axes.spines.top'] = False
@@ -179,7 +178,6 @@ LR3 Gollisch/data/Experiments/Mouse/'+experiment+'/analyzed/'
     plt.yticks(ticks)
     plt.text(.7, -1.05, 'R = {:4.2}'.format(r_co))
     plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
-#    plt.xticks?
     plt.axis(axis_limits)
     plt.axis('square')
     for i in outliers_co:
@@ -256,7 +254,7 @@ plt.xlabel('Full field flicker')
 plt.ylabel('On off steps')
 
 plt.subplot(2, 2, 4)
-plt.plot(all_c, all_o , '.', alpha=.5)
+plt.plot(all_c, all_o, '.', alpha=.5)
 plt.text(.7, -1.05, 'R = {:4.2}'.format(r_co))
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
 plt.axis(axis_limits)
