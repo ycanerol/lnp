@@ -203,7 +203,7 @@ LR3 Gollisch/data/Experiments/Mouse/2017_02_14/allindices.npz',
          all_c=all_c)
 
 # %%
-exp_name = 'All experiments'
+exp_name = 'all_experiments'
 
 r_cf = np.corrcoef(all_c, all_f)[1, 0]
 r_of = np.corrcoef(all_o, all_f)[1, 0]

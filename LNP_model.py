@@ -12,7 +12,7 @@ import matplotlib
 
 execution_timer = datetime.now()
 
-total_frames = 100000
+total_frames = 3000000
 dt = 0.01   # Time step
 t = np.arange(0, total_frames*dt, dt)  # Time vector
 filter_time = .6  # The longest feature RGCs respond to is ~600ms
@@ -27,7 +27,7 @@ def make_noise():  # Generate gaussian noise for stimulus
 stimulus = make_noise()
 
 filter_index1 = 1  # Change filter type here
-filter_index2 = 3
+filter_index2 = 4
 
 
 def linear_filter(t, filter_index):    # Define filter according to choice
@@ -53,7 +53,7 @@ filtered2 = np.convolve(filter_kernel2, stimulus,
 
 k = np.linspace(-5, 5, 1001)
 nlt_index1 = 1
-nlt_index2 = 4
+nlt_index2 = 1
 
 
 def nlt(k, nlt_index):
@@ -92,11 +92,12 @@ def sta(spikes, stimulus, filter_length, total_frames):
     sta_unscaled = snippets/sum(spikes)   # Normalize/scale the STA
     sta_scaled = sta_unscaled/np.sqrt(sum(np.power(sta_unscaled, 2)))
     return sta_scaled, sta_unscaled
-recovered_kernel = sta(spikes, stimulus, filter_length,total_frames)[0]  
+recovered_kernel = sta(spikes, stimulus, filter_length, total_frames)[0]
 # Use scaled STA
 
 filtered_recovery = np.convolve(recovered_kernel, stimulus,
                                 mode='full')[:-filter_length+1]
+
 
 # Variable bin size, log
 def log_nlt_recovery(spikes, filtered_recovery, bin_nr, k):
@@ -109,6 +110,7 @@ def log_nlt_recovery(spikes, filtered_recovery, bin_nr, k):
                                           (np.average(spikes[np.where
                                                              (logbindices == i)]))/dt)
     return logbins, spikecount_in_logbins
+
 
 # Using mquantiles
 def q_nlt_recovery(spikes, filtered_recovery, bin_nr, k=0):
