@@ -18,6 +18,7 @@ all_experiments = os.listdir(main_dir)[1:]
 all_o = np.array([])
 all_f = np.array([])
 all_c = np.array([])
+dataset_sizes = np.array([])
 
 for experiment in all_experiments:
 #%%
@@ -195,19 +196,35 @@ LR3 Gollisch/figures/{}'.format(exp_name), dpi=200)
     all_o = np.append(all_o, onoffindices_o)
     all_f = np.append(all_f, onoffindices_f)
     all_c = np.append(all_c, onoffindices_c)
+    dataset_sizes = np.append(dataset_sizes, onoffindices_o.size).astype(int)
 
 np.savez('/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/data/Experiments/Mouse/2017_02_14/allindices.npz',
          all_o=all_o,
          all_f=all_f,
-         all_c=all_c)
+         all_c=all_c,
+         dataset_sizes=dataset_sizes)
 
 # %%
 exp_name = 'all_experiments'
 
+w_pf = np.sum(dataset_sizes[:2])  # Index at which data with preframes start
+
+# Divide experiments into two, without and with preframes
+o_npf, o_pf = all_o[:w_pf], all_o[w_pf:]
+f_npf, f_pf = all_f[:w_pf], all_f[w_pf:]
+c_npf, c_pf = all_c[:w_pf], all_c[w_pf:]
+
+# Correlation coefficients for all pairs
 r_cf = np.corrcoef(all_c, all_f)[1, 0]
 r_of = np.corrcoef(all_o, all_f)[1, 0]
 r_co = np.corrcoef(all_c, all_o)[1, 0]
+
+# Correlation coefficients separate for w/ and w/o preframes
+r_of_pf = np.corrcoef(o_pf, f_pf)[1, 0]
+r_of_npf = np.corrcoef(o_npf, f_npf)[1, 0]
+r_co_pf = np.corrcoef(o_pf, c_pf)[1, 0]
+r_co_npf = np.corrcoef(o_npf, c_npf)[1, 0]
 
 plt.figure(figsize=(10, 10), dpi=200)
 plt.suptitle(exp_name)
@@ -232,7 +249,7 @@ plt.xlabel('On-off index')
 plt.subplot(2, 2, 2)
 plt.plot(all_f, all_c, '.', alpha=.5)
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
-plt.text(.7, -1.05, 'R = {:4.2}'.format(r_cf))
+plt.text(.7, -1.05, 'r = {:4.2}'.format(r_cf))
 plt.axis(axis_limits)
 plt.axis('square')
 plt.xticks(ticks)
@@ -242,8 +259,14 @@ plt.ylabel('Checkerflicker')
 plt.xlabel('Full field flicker')
 
 plt.subplot(2, 2, 3)
-plt.plot(all_f, all_o, '.', alpha=.5)
-plt.text(.7, -1.05, 'R = {:4.2}'.format(r_of))
+#plt.plot(all_f, all_o, '.', alpha=.5)
+plt.plot(f_npf, o_npf, '.', alpha=.5)
+plt.plot(f_pf, o_pf, '.', alpha=.5)
+plt.text(.4, -0.85, r'$r_{{total}}$ = {:4.2}'.format(r_of))
+plt.text(.4, -0.95, r'$r_{{no\;preframes}}$ = {:4.2}'.format(r_of_npf),
+         color='C0')
+plt.text(.4, -1.05, r'$r_{{with\;preframes}}$ = {:4.2}'.format(r_of_pf),
+         color='C1')
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
 plt.axis(axis_limits)
 plt.axis('square')
@@ -254,8 +277,14 @@ plt.xlabel('Full field flicker')
 plt.ylabel('On off steps')
 
 plt.subplot(2, 2, 4)
-plt.plot(all_c, all_o, '.', alpha=.5)
-plt.text(.7, -1.05, 'R = {:4.2}'.format(r_co))
+#plt.plot(all_c, all_o, '.', alpha=.5)
+plt.plot(c_npf, o_npf, '.', alpha=.5)
+plt.plot(c_pf, o_pf, '.', alpha=.5)
+plt.text(.4, -0.85, r'$r_{{total}}$ = {:4.2}'.format(r_co),)
+plt.text(.4, -0.95, r'$r_{{no\;preframes}}$ = {:4.2}'.format(r_co_npf),
+         color='C0')
+plt.text(.4, -1.05, r'$r_{{with\;preframes}}$ = {:4.2}'.format(r_co_pf),
+         color='C1')
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
 plt.axis(axis_limits)
 plt.axis('square')
@@ -268,3 +297,4 @@ plt.tight_layout()
 plt.subplots_adjust(top=0.9)
 plt.savefig('/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/figures/{}'.format(exp_name), dpi=200)
+plt.show()
