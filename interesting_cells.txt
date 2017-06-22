@@ -1,0 +1,32 @@
+2016-10-21
+3002	exponential for both
+3201	quadratic for checker
+4403	exponential for both
+4704	quadratic for checker
+9702	exponential
+11101	upside down temporal fff filter
+23803	flips nlt from off to on
+
+2017-01-17
+103	exponential for both, higher ooi for onoffsteps
+703	onoff for checker, exponential FFF
+902	quadratic for FF, exponential checker
+3101	quadratic to exponential
+3307	quadratic to exponential, interesting RF
+4105	flips, quadratic to exponential
+6205	flips, sigmoid to exponential, interesting RF
+7703	flips for onoffsteps, exponential otherwise
+9502	flips, both exponential
+14103	typical onoff cell?
+23101 	flips for onoffsteps, linear otherwise
+
+2017-01-31 small number of cells
+301	extreme exponential, flips for onoffsteps
+1101	flips, linear for both
+8401	typical off cell
+8501	typical on cell
+
+2017-02-14
+901 	typical on cell
+20601	typical off cell but onoff with onoffsteps
+22302 	flips from on to off
