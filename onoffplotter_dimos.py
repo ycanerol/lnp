@@ -245,29 +245,31 @@ plt.hist(all_o, bins=np.linspace(-1, 1, num=40),
          alpha=.5, color='C2')
 plt.xticks(ticks)
 plt.xlabel('On-off index')
+plt.subplots_adjust(hspace=.4)
 
 plt.subplot(2, 2, 2)
+plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4, color='black')
 plt.plot(all_f, all_c, '.', alpha=.5)
-plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
 plt.text(.7, -1.05, 'r = {:4.2}'.format(r_cf))
 plt.axis(axis_limits)
 plt.axis('square')
 plt.xticks(ticks)
 plt.yticks(ticks)
-plt.title('On-Off indices obtained from Full field vs Checkerflicker')
+plt.title('On-Off indices obtained from\nFull field vs Checkerflicker')
 plt.ylabel('Checkerflicker')
 plt.xlabel('Full field flicker')
 
 plt.subplot(2, 2, 3)
 #plt.plot(all_f, all_o, '.', alpha=.5)
+plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4, color='black')
 plt.plot(f_npf, o_npf, '.', alpha=.5)
 plt.plot(f_pf, o_pf, '.', alpha=.5)
-plt.text(.4, -0.85, r'$r_{{total}}$ = {:4.2}'.format(r_of))
-plt.text(.4, -0.95, r'$r_{{no\;preframes}}$ = {:4.2}'.format(r_of_npf),
-         color='C0')
-plt.text(.4, -1.05, r'$r_{{with\;preframes}}$ = {:4.2}'.format(r_of_pf),
-         color='C1')
-plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
+plt.text(1, -0.85, r'$r_{{total}}$ = {:4.2}'.format(r_of),
+         horizontalalignment='right')
+plt.text(1, -0.95, r'$r_{{no\;preframes}}$ = {:4.2}'.format(r_of_npf),
+         color='C0', horizontalalignment='right')
+plt.text(1, -1.05, r'$r_{{with\;preframes}}$ = {:4.2}'.format(r_of_pf),
+         color='C1', horizontalalignment='right')
 plt.axis(axis_limits)
 plt.axis('square')
 plt.xticks(ticks)
@@ -278,14 +280,15 @@ plt.ylabel('On off steps')
 
 plt.subplot(2, 2, 4)
 #plt.plot(all_c, all_o, '.', alpha=.5)
+plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4, color='black')
 plt.plot(c_npf, o_npf, '.', alpha=.5)
 plt.plot(c_pf, o_pf, '.', alpha=.5)
-plt.text(.4, -0.85, r'$r_{{total}}$ = {:4.2}'.format(r_co),)
-plt.text(.4, -0.95, r'$r_{{no\;preframes}}$ = {:4.2}'.format(r_co_npf),
-         color='C0')
-plt.text(.4, -1.05, r'$r_{{with\;preframes}}$ = {:4.2}'.format(r_co_pf),
-         color='C1')
-plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4)
+plt.text(1, -0.85, r'$r_{{total}}$ = {:4.2}'.format(r_co),
+         horizontalalignment='right')
+plt.text(1, -0.95, r'$r_{{no\;preframes}}$ = {:4.2}'.format(r_co_npf),
+         color='C0', horizontalalignment='right')
+plt.text(1, -1.05, r'$r_{{with\;preframes}}$ = {:4.2}'.format(r_co_pf),
+         color='C1', horizontalalignment='right')
 plt.axis(axis_limits)
 plt.axis('square')
 plt.xticks(ticks)
@@ -293,7 +296,7 @@ plt.yticks(ticks)
 plt.title('Checkerflicker vs On off steps')
 plt.xlabel('Checkerflicker')
 plt.ylabel('On off steps')
-plt.tight_layout()
+#plt.tight_layout()
 plt.subplots_adjust(top=0.9)
 plt.savefig('/Users/ycan/Documents/official/gottingen/lab rotations/\
 LR3 Gollisch/figures/{}'.format(exp_name), dpi=200)
