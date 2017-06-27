@@ -41,13 +41,13 @@ LR3 Gollisch/figures/replotted/' + i[2]
     flipper = 1
     if i[3]:
         flipper = -1
-    
+
     # %% plot all
     matplotlib.rcParams['axes.spines.right'] = False
     matplotlib.rcParams['axes.spines.top'] = False
     matplotlib.rcParams['axes.spines.left'] = True
-    matplotlib.rcParams['axes.spines.bottom'] = True    
-    
+    matplotlib.rcParams['axes.spines.bottom'] = True
+
     plt.figure(figsize=(12, 12), dpi=200)
     plt.suptitle(str(' '.join(str(c['spike_path'])
                  .split('rasters')[0].split('Experiments')[1]
@@ -115,7 +115,7 @@ LR3 Gollisch/figures/replotted/' + i[2]
     matplotlib.rcParams['axes.spines.top'] = False
     matplotlib.rcParams['axes.spines.left'] = False
     matplotlib.rcParams['axes.spines.bottom'] = False
-                       
+
     plt.subplot(3, 3, 7)
     plt.imshow(c['sta_unscaled'][:, :, c['max_i'][2]].reshape((60, 80,)),
                cmap='Greys',
