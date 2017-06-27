@@ -208,6 +208,8 @@ LR3 Gollisch/data/Experiments/Mouse/2017_02_14/allindices.npz',
 # %%
 exp_name = 'all_experiments'
 
+hist_axis_limits = [-1, 1, 0, 30]
+
 w_pf = np.sum(dataset_sizes[:2])  # Index at which data with preframes start
 
 # Divide experiments into two, without and with preframes
@@ -233,17 +235,20 @@ plt.subplot(6, 2, 1)
 plt.hist(all_f, bins=np.linspace(-1, 1, num=40),
          alpha=.5, color='C0')
 plt.xticks(ticks)
+plt.axis(hist_axis_limits)
 plt.ylabel('FFF')
 plt.subplot(6, 2, 3)
 plt.ylabel('Checker')
 plt.hist(all_c, bins=np.linspace(-1, 1, num=40),
          alpha=.5, color='C1')
 plt.xticks(ticks)
+plt.axis(hist_axis_limits)
 plt.subplot(6, 2, 5)
 plt.ylabel('On off steps')
 plt.hist(all_o, bins=np.linspace(-1, 1, num=40),
          alpha=.5, color='C2')
 plt.xticks(ticks)
+plt.axis(hist_axis_limits)
 plt.xlabel('On-off index')
 plt.subplots_adjust(hspace=.4)
 

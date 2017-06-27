@@ -10,12 +10,17 @@ Figure plotter
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 
 
-#           Exp date      Cluster Label Flipped
-plotthis = [['2017_02_14', '901', 'On cell', False],
-            ['2017_01_31', '8401', 'Off cell', True],
-            ['2017_01_17', '201',  'On off 1', True]]
+#           Exp date      Cluster   Label       Flipped
+plotthis = [['2017_02_14', '901',   'On cell',  False],
+            ['2017_01_31', '8401',  'Off cell', True],
+            ['2017_01_17', '201',   'On off 1', True],
+            ['2017_01_17', '4105',  'Off to on',False],
+            ['2017_02_14', '22302', 'On to off',True],
+            ]
+
 
 for i in plotthis:
 
@@ -31,13 +36,18 @@ LR3 Gollisch/data/Experiments/Mouse/'
     f = np.load(str(currentfile_f))
 
     savepath = '/Users/ycan/Documents/official/gottingen/lab rotations/\
-LR3 Gollisch/figures' + i[2]
+LR3 Gollisch/figures/replotted/' + i[2]
 
     flipper = 1
     if i[3]:
         flipper = -1
-
+    
     # %% plot all
+    matplotlib.rcParams['axes.spines.right'] = False
+    matplotlib.rcParams['axes.spines.top'] = False
+    matplotlib.rcParams['axes.spines.left'] = True
+    matplotlib.rcParams['axes.spines.bottom'] = True    
+    
     plt.figure(figsize=(12, 12), dpi=200)
     plt.suptitle(str(' '.join(str(c['spike_path'])
                  .split('rasters')[0].split('Experiments')[1]
@@ -101,6 +111,11 @@ LR3 Gollisch/figures' + i[2]
     plt.xlabel('Eigenvalue index')
     plt.ylabel('Variance')
 
+    matplotlib.rcParams['axes.spines.right'] = False
+    matplotlib.rcParams['axes.spines.top'] = False
+    matplotlib.rcParams['axes.spines.left'] = False
+    matplotlib.rcParams['axes.spines.bottom'] = False
+                       
     plt.subplot(3, 3, 7)
     plt.imshow(c['sta_unscaled'][:, :, c['max_i'][2]].reshape((60, 80,)),
                cmap='Greys',
@@ -118,6 +133,6 @@ LR3 Gollisch/figures' + i[2]
                vmax=np.max(c['sta_unscaled']))
     plt.title('Brightest pixel: {}'.format(c['max_i']))
     plt.tight_layout(pad=5, h_pad=1, w_pad=1.8)
-    plt.show()
-#    plt.savefig(savepath, dpi=200, bbox_inches='tight')
+#    plt.show()
+    plt.savefig(savepath, dpi=200, bbox_inches='tight')
     plt.close()
