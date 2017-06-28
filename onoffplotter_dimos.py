@@ -209,6 +209,7 @@ LR3 Gollisch/data/Experiments/Mouse/2017_02_14/allindices.npz',
 exp_name = 'all_experiments'
 
 hist_axis_limits = [-1, 1, 0, 30]
+r_fontsize=14
 
 w_pf = np.sum(dataset_sizes[:2])  # Index at which data with preframes start
 
@@ -229,9 +230,10 @@ r_co_pf = np.corrcoef(o_pf, c_pf)[1, 0]
 r_co_npf = np.corrcoef(o_npf, c_npf)[1, 0]
 
 plt.figure(figsize=(10, 10), dpi=200)
-plt.suptitle(exp_name)
+#plt.suptitle(exp_name)
 
 plt.subplot(6, 2, 1)
+plt.title('Distribution of on-off indices')
 plt.hist(all_f, bins=np.linspace(-1, 1, num=40),
          alpha=.5, color='C0')
 plt.xticks(ticks)
@@ -255,7 +257,8 @@ plt.subplots_adjust(hspace=.4)
 plt.subplot(2, 2, 2)
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4, color='black')
 plt.plot(all_f, all_c, '.', alpha=.5)
-plt.text(.7, -1.05, 'r = {:4.2}'.format(r_cf))
+plt.text(1, -1.05, 'r = {:4.2}'.format(r_cf), fontsize=r_fontsize,
+         horizontalalignment='right')
 plt.axis(axis_limits)
 plt.axis('square')
 plt.xticks(ticks)
@@ -269,12 +272,12 @@ plt.subplot(2, 2, 3)
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4, color='black')
 plt.plot(f_npf, o_npf, '.', alpha=.5)
 plt.plot(f_pf, o_pf, '.', alpha=.5)
-plt.text(1, -0.85, r'$r_{{total}}$ = {:4.2}'.format(r_of),
-         horizontalalignment='right')
-plt.text(1, -0.95, r'$r_{{no\;preframes}}$ = {:4.2}'.format(r_of_npf),
-         color='C0', horizontalalignment='right')
+plt.text(1, -0.81, r'$r_{{total}}$ = {:4.2}'.format(r_of), 
+         fontsize=r_fontsize, horizontalalignment='right')
+plt.text(1, -0.93, r'$r_{{no\;preframes}}$ = {:4.2}'.format(r_of_npf), 
+         fontsize=r_fontsize, color='C0', horizontalalignment='right')
 plt.text(1, -1.05, r'$r_{{with\;preframes}}$ = {:4.2}'.format(r_of_pf),
-         color='C1', horizontalalignment='right')
+         fontsize=r_fontsize, color='C1', horizontalalignment='right')
 plt.axis(axis_limits)
 plt.axis('square')
 plt.xticks(ticks)
@@ -288,12 +291,12 @@ plt.subplot(2, 2, 4)
 plt.plot(np.linspace(-1, 1), np.linspace(-1, 1), '--', alpha=.4, color='black')
 plt.plot(c_npf, o_npf, '.', alpha=.5)
 plt.plot(c_pf, o_pf, '.', alpha=.5)
-plt.text(1, -0.85, r'$r_{{total}}$ = {:4.2}'.format(r_co),
-         horizontalalignment='right')
-plt.text(1, -0.95, r'$r_{{no\;preframes}}$ = {:4.2}'.format(r_co_npf),
-         color='C0', horizontalalignment='right')
+plt.text(1, -0.81, r'$r_{{total}}$ = {:4.2}'.format(r_co),
+         fontsize=r_fontsize, horizontalalignment='right')
+plt.text(1, -0.93, r'$r_{{no\;preframes}}$ = {:4.2}'.format(r_co_npf),
+         fontsize=r_fontsize, color='C0', horizontalalignment='right')
 plt.text(1, -1.05, r'$r_{{with\;preframes}}$ = {:4.2}'.format(r_co_pf),
-         color='C1', horizontalalignment='right')
+         fontsize=r_fontsize, color='C1', horizontalalignment='right')
 plt.axis(axis_limits)
 plt.axis('square')
 plt.xticks(ticks)
