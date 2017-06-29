@@ -65,13 +65,13 @@ LR3 Gollisch/figures/replotted/' + i[2]
     ax = plt.subplot(3, 3, 2)
     plt.plot(f['bins_sta'], f['spikecount_sta'][::flipper], '-')
     plt.plot(f['bins_stc'], f['spikecount_stc'][::flipper], '-')
-    plt.text(.5, .99, 'On-Off index: {:2.2f}'
+    plt.text(.5, .99, 'On-off index: {:2.2f}'
              .format(float(f['onoffindex'])),
              horizontalalignment='center',
              verticalalignment='top',
              transform=ax.transAxes)
-    plt.title('Non-linearities')
-    plt.ylabel('Firing rate')
+    plt.title('Nonlinearities')
+    plt.ylabel('Firing rate [Hz]')
     plt.xlabel('Linear output')
 
     plt.subplot(3, 3, 3)
@@ -89,20 +89,20 @@ LR3 Gollisch/figures/replotted/' + i[2]
     plt.ylabel('Checkerflicker\n$\\regular_{Linear\,\,\,output}$', fontsize=16)
     plt.xlabel('Time [ms]')
     plt.xticks(np.linspace(0, 20, 3), np.linspace(0, 600, 3).astype(int))
-    plt.legend(['STA', 'STC', 'Center pixel'],
+    plt.legend(['Weighted STA', 'STC', 'Center pixel'],
                fontsize='small')
 
     ax = plt.subplot(3, 3, 5)
     for j in range(len(c['bins'])):
         plt.plot(c['bins'][j], c['spike_counts_in_bins'][j][::flipper], '-')
-    plt.text(.5, .99, 'On-Off index: {:2.2f}'
+    plt.text(.5, .99, 'On-off index: {:2.2f}'
              .format(float(c['onoffindex'])),
              horizontalalignment='center',
              verticalalignment='top',
              transform=ax.transAxes)
-    plt.title('Non-linearities')
+    plt.title('Nonlinearities')
     plt.xlabel('Linear output')
-    plt.ylabel('Firing rate')
+    plt.ylabel('Firing rate [Hz]')
 
     plt.subplot(3, 3, 6)
     plt.plot(c['w'], 'o')
