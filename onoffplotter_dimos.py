@@ -263,7 +263,7 @@ plt.axis(axis_limits)
 plt.axis('square')
 plt.xticks(ticks)
 plt.yticks(ticks)
-plt.title('On-Off indices obtained from\nFull field vs Checkerflicker')
+plt.title('On-off indices obtained from\nFull field vs Checkerflicker')
 plt.ylabel('Checkerflicker')
 plt.xlabel('Full-field flicker')
 
