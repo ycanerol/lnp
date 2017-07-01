@@ -121,6 +121,8 @@ LR3 Gollisch/figures/replotted/' + i[2]
                cmap='Greys',
                vmin=np.min(c['sta_unscaled']),
                vmax=np.max(c['sta_unscaled']))
+    plt.xlabel('Distance [pixels]')
+    plt.ylabel('Distance [pixels]')
     plt.title('Receptive field')
 
     ax = plt.subplot(3, 3, 8)
